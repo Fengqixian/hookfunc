@@ -7,12 +7,12 @@
 package wire
 
 import (
+	"github.com/google/wire"
+	"github.com/spf13/viper"
 	"hookfunc-media/internal/repository"
 	"hookfunc-media/internal/server"
 	"hookfunc-media/pkg/app"
 	"hookfunc-media/pkg/log"
-	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:
@@ -27,7 +27,7 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 // wire.go:
 
-var repositorySet = wire.NewSet(repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewUserRepository)
+var repositorySet = wire.NewSet(repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewUserRepository, repository.NewResourceRepository)
 
 // build App
 func newApp(migrate *server.Migrate) *app.App {

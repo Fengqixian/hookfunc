@@ -7,6 +7,8 @@
 package wire
 
 import (
+	"github.com/google/wire"
+	"github.com/spf13/viper"
 	"hookfunc-media/internal/handler"
 	"hookfunc-media/internal/repository"
 	"hookfunc-media/internal/server"
@@ -16,8 +18,6 @@ import (
 	"hookfunc-media/pkg/jwt"
 	"hookfunc-media/pkg/log"
 	"hookfunc-media/pkg/server/http"
-	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:
@@ -43,11 +43,11 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 // wire.go:
 
-var repositorySet = wire.NewSet(repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewUserRepository)
+var repositorySet = wire.NewSet(repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewUserRepository, repository.NewResourceRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewUserService)
+var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewResourceService)
 
-var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler)
+var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewResourceHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob, server.NewTask)
 

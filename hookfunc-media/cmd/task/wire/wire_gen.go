@@ -7,11 +7,11 @@
 package wire
 
 import (
+	"github.com/google/wire"
+	"github.com/spf13/viper"
 	"hookfunc-media/internal/server"
 	"hookfunc-media/pkg/app"
 	"hookfunc-media/pkg/log"
-	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 // Injectors from wire.go:

@@ -17,6 +17,7 @@ var repositorySet = wire.NewSet(
 	repository.NewRedis,
 	repository.NewRepository,
 	repository.NewUserRepository,
+	repository.NewResourceRepository,
 )
 
 // build App
