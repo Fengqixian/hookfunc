@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"hookfunc-media/api/v1"
 	"hookfunc-media/internal/service"
-	"go.uber.org/zap"
 	"net/http"
 )
 
@@ -21,15 +21,16 @@ func NewUserHandler(handler *Handler, userService service.UserService) *UserHand
 }
 
 // Register godoc
-// @Summary 用户注册
-// @Schemes
-// @Description 目前只支持邮箱登录
-// @Tags 用户模块
-// @Accept json
-// @Produce json
-// @Param request body v1.RegisterRequest true "params"
-// @Success 200 {object} v1.Response
-// @Router /register [post]
+//
+//	@Summary	用户注册
+//	@Schemes
+//	@Description	目前只支持邮箱登录
+//	@Tags			用户模块
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		v1.RegisterRequest	true	"params"
+//	@Success		200		{object}	v1.Response
+//	@Router			/register [post]
 func (h *UserHandler) Register(ctx *gin.Context) {
 	req := new(v1.RegisterRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
@@ -47,15 +48,16 @@ func (h *UserHandler) Register(ctx *gin.Context) {
 }
 
 // Login godoc
-// @Summary 账号登录
-// @Schemes
-// @Description
-// @Tags 用户模块
-// @Accept json
-// @Produce json
-// @Param request body v1.LoginRequest true "params"
-// @Success 200 {object} v1.LoginResponse
-// @Router /login [post]
+//
+//	@Summary	账号登录
+//	@Schemes
+//	@Description
+//	@Tags		用户模块
+//	@Accept		json
+//	@Produce	json
+//	@Param		request	body		v1.LoginRequest	true	"params"
+//	@Success	200		{object}	v1.LoginResponse
+//	@Router		/login [post]
 func (h *UserHandler) Login(ctx *gin.Context) {
 	var req v1.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -74,15 +76,16 @@ func (h *UserHandler) Login(ctx *gin.Context) {
 }
 
 // GetProfile godoc
-// @Summary 获取用户信息
-// @Schemes
-// @Description
-// @Tags 用户模块
-// @Accept json
-// @Produce json
-// @Security Bearer
-// @Success 200 {object} v1.GetProfileResponse
-// @Router /user [get]
+//
+//	@Summary	获取用户信息
+//	@Schemes
+//	@Description
+//	@Tags		用户模块
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Success	200	{object}	v1.GetProfileResponse
+//	@Router		/user [get]
 func (h *UserHandler) GetProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 	if userId == "" {

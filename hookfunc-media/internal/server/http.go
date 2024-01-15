@@ -2,6 +2,9 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	apiV1 "hookfunc-media/api/v1"
 	"hookfunc-media/docs"
 	"hookfunc-media/internal/handler"
@@ -9,9 +12,6 @@ import (
 	"hookfunc-media/pkg/jwt"
 	"hookfunc-media/pkg/log"
 	"hookfunc-media/pkg/server/http"
-	"github.com/spf13/viper"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewHTTPServer(
@@ -19,6 +19,7 @@ func NewHTTPServer(
 	conf *viper.Viper,
 	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
+	wechatHandler *handler.WechatHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(
@@ -56,6 +57,7 @@ func NewHTTPServer(
 		{
 			noAuthRouter.POST("/register", userHandler.Register)
 			noAuthRouter.POST("/login", userHandler.Login)
+			noAuthRouter.POST("/wechat/program/login", wechatHandler.ProgramLogin)
 		}
 		// Non-strict permission routing group
 		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))

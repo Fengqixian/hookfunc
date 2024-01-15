@@ -10,13 +10,13 @@ security:
     key: QQYnRFerJTSEcrfB89fw8prOaObmrch8
 data:
   mysql:
-    user: root:woxianghenichigefan@mysql@tcp(47.109.41.242:3306)/db_service?charset=utf8mb4&parseTime=True&loc=Local
+    user: root:woxianghenichigefan@mysql@tcp(47.109.41.242:3306)/hookfun_db?charset=utf8mb4&parseTime=True&loc=Local
   redis:
     addr: 47.109.41.242:6379
     password: "woxianghenichigefan@redis"
     db: 0
-    read_timeout: 0.2s
-    write_timeout: 0.2s
+    read_timeout: 0.5s
+    write_timeout: 0.5s
 
 log:
   log_level: debug

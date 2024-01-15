@@ -12,6 +12,7 @@ type LoginRequest struct {
 type LoginResponseData struct {
 	AccessToken string `json:"accessToken"`
 }
+
 type LoginResponse struct {
 	Response
 	Data LoginResponseData

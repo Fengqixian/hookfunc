@@ -4,6 +4,8 @@
 package wire
 
 import (
+	"github.com/google/wire"
+	"github.com/spf13/viper"
 	"hookfunc-media/internal/handler"
 	"hookfunc-media/internal/repository"
 	"hookfunc-media/internal/server"
@@ -13,8 +15,6 @@ import (
 	"hookfunc-media/pkg/jwt"
 	"hookfunc-media/pkg/log"
 	"hookfunc-media/pkg/server/http"
-	"github.com/google/wire"
-	"github.com/spf13/viper"
 )
 
 var repositorySet = wire.NewSet(
@@ -24,18 +24,22 @@ var repositorySet = wire.NewSet(
 	repository.NewTransaction,
 	repository.NewUserRepository,
 	repository.NewResourceRepository,
+	repository.NewUserInfoRepository,
 )
 
 var serviceSet = wire.NewSet(
 	service.NewService,
 	service.NewUserService,
 	service.NewResourceService,
+	service.NewUserInfoService,
+	service.NewWechatService,
 )
 
 var handlerSet = wire.NewSet(
 	handler.NewHandler,
 	handler.NewUserHandler,
 	handler.NewResourceHandler,
+	handler.NewWechatHandler,
 )
 
 var serverSet = wire.NewSet(
