@@ -22,6 +22,11 @@ type userInfoService struct {
 	userInfoRepository repository.UserInfoRepository
 }
 
-func (s *userInfoService) GetUserInfo(ctx context.Context, openid string) (*model.UserInfo, error) {
+func (s *userInfoService) GetUserInfo(ctx context.Context, jsCode string) (*model.UserInfo, error) {
+	openid, err := s.userInfoRepository.GetOpenId(jsCode)
+	if err != nil {
+		return nil, err
+	}
+
 	return s.userInfoRepository.FirstByOpenId(ctx, openid)
 }

@@ -3,11 +3,15 @@ package repository
 import (
 	"context"
 	"fmt"
-	"hookfunc-media/pkg/log"
 	"github.com/redis/go-redis/v9"
+	"github.com/silenceper/wechat/v2"
+	"github.com/silenceper/wechat/v2/cache"
+	"github.com/silenceper/wechat/v2/miniprogram"
+	"github.com/silenceper/wechat/v2/miniprogram/config"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"hookfunc-media/pkg/log"
 	"moul.io/zapgorm2"
 	"time"
 )
@@ -15,16 +19,18 @@ import (
 const ctxTxKey = "TxKey"
 
 type Repository struct {
-	db     *gorm.DB
-	rdb    *redis.Client
-	logger *log.Logger
+	miniProgram *miniprogram.MiniProgram
+	db          *gorm.DB
+	rdb         *redis.Client
+	logger      *log.Logger
 }
 
-func NewRepository(db *gorm.DB, rdb *redis.Client, logger *log.Logger) *Repository {
+func NewRepository(miniProgram *miniprogram.MiniProgram, db *gorm.DB, rdb *redis.Client, logger *log.Logger) *Repository {
 	return &Repository{
-		db:     db,
-		rdb:    rdb,
-		logger: logger,
+		miniProgram: miniProgram,
+		db:          db,
+		rdb:         rdb,
+		logger:      logger,
 	}
 }
 
@@ -81,4 +87,32 @@ func NewRedis(conf *viper.Viper) *redis.Client {
 	}
 
 	return rdb
+}
+
+func NewWechatMiniProgram(conf *viper.Viper) *miniprogram.MiniProgram {
+	wc := InitWechat(conf)
+	offCfg := &config.Config{
+		AppID:     conf.GetString("wechat.appid"),
+		AppSecret: conf.GetString("wechat.secret"),
+	}
+	return wc.GetMiniProgram(offCfg)
+}
+
+func InitWechat(conf *viper.Viper) *wechat.Wechat {
+	wc := wechat.NewWechat()
+	redisOpts := &cache.RedisOpts{
+		Host:        conf.GetString("data.redis.addr"),
+		Password:    conf.GetString("data.redis.password"),
+		Database:    conf.GetInt("data.redis.db"),
+		MaxActive:   100,
+		MaxIdle:     100,
+		IdleTimeout: 30000,
+	}
+	redisCache := cache.NewRedis(redisOpts)
+	wc.SetCache(redisCache)
+	return wc
+}
+
+func (r *Repository) GetWechatMiniProgram() *miniprogram.MiniProgram {
+	return r.miniProgram
 }

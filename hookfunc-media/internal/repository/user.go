@@ -3,9 +3,9 @@ package repository
 import (
 	"context"
 	"errors"
+	"gorm.io/gorm"
 	v1 "hookfunc-media/api/v1"
 	"hookfunc-media/internal/model"
-	"gorm.io/gorm"
 )
 
 type UserRepository interface {

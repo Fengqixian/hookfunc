@@ -18,6 +18,7 @@ import (
 )
 
 var repositorySet = wire.NewSet(
+	repository.NewWechatMiniProgram,
 	repository.NewDB,
 	repository.NewRedis,
 	repository.NewRepository,
