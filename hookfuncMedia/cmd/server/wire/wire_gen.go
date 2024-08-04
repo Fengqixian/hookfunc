@@ -32,10 +32,10 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	transaction := repository.NewTransaction(repositoryRepository)
 	sidSid := sid.NewSid()
 	serviceService := service.NewService(transaction, logger, sidSid, jwtJWT)
-	userRepository := repository.NewUserRepository(repositoryRepository)
-	userService := service.NewUserService(serviceService, userRepository)
-	userHandler := handler.NewUserHandler(handlerHandler, userService)
-	wechatService := service.NewWechatService(serviceService, repositoryRepository)
+	userInfoRepository := repository.NewUserInfoRepository(repositoryRepository)
+	userInfoService := service.NewUserInfoService(serviceService, userInfoRepository)
+	userHandler := handler.NewUserHandler(handlerHandler, userInfoService)
+	wechatService := service.NewWechatService(serviceService, repositoryRepository, userInfoService)
 	wechatHandler := handler.NewWechatHandler(handlerHandler, wechatService)
 	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler)
 	job := server.NewJob(logger)
@@ -46,9 +46,9 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 // wire.go:
 
-var repositorySet = wire.NewSet(repository.NewWechatMiniProgram, repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewUserRepository, repository.NewResourceRepository, repository.NewUserInfoRepository)
+var repositorySet = wire.NewSet(repository.NewWechatMiniProgram, repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewResourceRepository, repository.NewUserInfoRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewResourceService, service.NewUserInfoService, service.NewWechatService)
+var serviceSet = wire.NewSet(service.NewService, service.NewResourceService, service.NewUserInfoService, service.NewWechatService)
 
 var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewResourceHandler, handler.NewWechatHandler)
 

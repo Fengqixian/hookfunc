@@ -23,14 +23,12 @@ var repositorySet = wire.NewSet(
 	repository.NewRedis,
 	repository.NewRepository,
 	repository.NewTransaction,
-	repository.NewUserRepository,
 	repository.NewResourceRepository,
 	repository.NewUserInfoRepository,
 )
 
 var serviceSet = wire.NewSet(
 	service.NewService,
-	service.NewUserService,
 	service.NewResourceService,
 	service.NewUserInfoService,
 	service.NewWechatService,

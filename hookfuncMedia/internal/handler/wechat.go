@@ -20,6 +20,27 @@ func NewWechatHandler(handler *Handler, wechatService service.WechatService) *We
 	}
 }
 
+// ProgramQrCodeLogin godoc
+//
+//	@Summary	微信小程序登录二维码
+//	@Schemes
+//	@Description
+//	@Tags		微信小程序
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	{object}	v1.Response
+//	@Router		/wechat/qr/login [post]
+func (h *WechatHandler) ProgramQrCodeLogin(ctx *gin.Context) {
+	loginQrCodeResponse, err := h.wechatService.GetLoginQrCode(ctx)
+	if err != nil {
+		h.logger.WithContext(ctx).Error("userService.Register error", zap.Error(err))
+		v1.HandleError(ctx, http.StatusInternalServerError, err, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, loginQrCodeResponse)
+}
+
 // ProgramLogin godoc
 //
 //	@Summary	微信小程序用户登录
@@ -32,13 +53,13 @@ func NewWechatHandler(handler *Handler, wechatService service.WechatService) *We
 //	@Success	200		{object}	v1.Response
 //	@Router		/wechat/program/login [post]
 func (h *WechatHandler) ProgramLogin(ctx *gin.Context) {
-	req := &v1.WechatProgramLoginRequest{}
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	var req v1.WechatProgramLoginRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
 		return
 	}
 
-	loginQrCodeResponse, err := h.wechatService.GetLoginQrCode(ctx)
+	loginQrCodeResponse, err := h.wechatService.GetJsCodeToken(ctx, &req)
 	if err != nil {
 		h.logger.WithContext(ctx).Error("userService.Register error", zap.Error(err))
 		v1.HandleError(ctx, http.StatusInternalServerError, err, nil)

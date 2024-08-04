@@ -10,10 +10,10 @@ security:
     key: QQYnRFerJTSEcrfB89fw8prOaObmrch8
 data:
   mysql:
-    user: root:woxianghenichigefan@mysql@tcp(47.109.41.242:3306)/service_db?charset=utf8mb4&parseTime=True&loc=Local
+    user: root:WZkYigvhY99QRFGB6@tcp(117.72.44.89:13306)/test_db?charset=utf8mb4&parseTime=True&loc=Local
   redis:
-    addr: 47.109.41.242:6379
-    password: "woxianghenichigefan@redis"
+    addr: 117.72.44.89:6379
+    password: "twfw343@#143!"
     db: 0
     read_timeout: 0.5s
     write_timeout: 0.5s

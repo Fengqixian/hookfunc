@@ -18,6 +18,25 @@ const loginCodeCacheKeyPrefix = "service:login:code:"
 type wechatService struct {
 	*Service
 	*repository.Repository
+	userInfoService UserInfoService
+}
+
+func (w wechatService) GetJsCodeToken(context context.Context, params *v1.WechatProgramLoginRequest) (string, error) {
+	code2Session, err := w.GetWechatMiniProgram().GetAuth().Code2Session(params.JsCode)
+	if err != nil {
+		return "", err
+	}
+
+	userInfo, err := w.userInfoService.GetUserInfo(context, code2Session.OpenID)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := w.jwt.GenToken(userInfo.Openid, time.Now().Add(time.Hour*24*90))
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }
 
 func (w wechatService) GetLoginQrCode(context context.Context) (*v1.LoginQrCodeResponse, error) {
@@ -61,12 +80,14 @@ func (w wechatService) GenRandomCode(context context.Context) string {
 type WechatService interface {
 	GetLoginQrCode(context context.Context) (*v1.LoginQrCodeResponse, error)
 	GenRandomCode(context context.Context) string
+	GetJsCodeToken(context context.Context, params *v1.WechatProgramLoginRequest) (string, error)
 }
 
-func NewWechatService(service *Service, repository *repository.Repository) WechatService {
+func NewWechatService(service *Service, repository *repository.Repository, userInfoService UserInfoService) WechatService {
 	return &wechatService{
-		Service:    service,
-		Repository: repository,
+		Service:         service,
+		Repository:      repository,
+		userInfoService: userInfoService,
 	}
 }
 

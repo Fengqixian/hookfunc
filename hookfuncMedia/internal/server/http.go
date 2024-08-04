@@ -55,8 +55,7 @@ func NewHTTPServer(
 		// No route group has permission
 		noAuthRouter := v1.Group("/")
 		{
-			noAuthRouter.POST("/register", userHandler.Register)
-			noAuthRouter.POST("/login", userHandler.Login)
+			noAuthRouter.POST("/wechat/qr/login", wechatHandler.ProgramQrCodeLogin)
 			noAuthRouter.POST("/wechat/program/login", wechatHandler.ProgramLogin)
 		}
 		// Non-strict permission routing group
@@ -68,7 +67,7 @@ func NewHTTPServer(
 		// Strict permission routing group
 		strictAuthRouter := v1.Group("/").Use(middleware.StrictAuth(jwt, logger))
 		{
-			strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
+			strictAuthRouter.PUT("/user", userHandler.GetProfile)
 		}
 	}
 

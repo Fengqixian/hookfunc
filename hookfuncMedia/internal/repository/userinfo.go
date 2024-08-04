@@ -9,8 +9,8 @@ import (
 )
 
 type UserInfoRepository interface {
-	GetOpenId(jsCode string) (string, error)
 	FirstByOpenId(ctx context.Context, openid string) (*model.UserInfo, error)
+	InsertUserInfo(ctx context.Context, userInfo *model.UserInfo) error
 }
 
 func NewUserInfoRepository(repository *Repository) UserInfoRepository {
@@ -23,9 +23,11 @@ type userInfoRepository struct {
 	*Repository
 }
 
-func (r *userInfoRepository) GetOpenId(jsCode string) (string, error) {
-	res, err := r.miniProgram.GetAuth().Code2Session(jsCode)
-	return res.OpenID, err
+func (r *userInfoRepository) InsertUserInfo(ctx context.Context, userInfo *model.UserInfo) error {
+	if err := r.DB(ctx).Create(userInfo).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *userInfoRepository) FirstByOpenId(ctx context.Context, id string) (*model.UserInfo, error) {
