@@ -16,6 +16,11 @@ definitions:
       userId:
         type: string
     type: object
+  v1.Goods:
+    properties:
+      id:
+        type: integer
+    type: object
   v1.Response:
     properties:
       code:
@@ -45,6 +50,41 @@ info:
   title: Nunu Example API
   version: 1.0.0
 paths:
+  /goods/get:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.Goods'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 通过商品ID获取商品信息
+      tags:
+      - 商品
+  /goods/list:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 获取所有商品信息
+      tags:
+      - 商品
   /user:
     get:
       consumes:
