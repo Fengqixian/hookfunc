@@ -33,12 +33,13 @@ func NewUserHandler(handler *Handler, userInfoService service.UserInfoService) *
 //	@Router		/user [get]
 func (h *UserHandler) GetProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
-	if userId == "" {
+	userinfo, err := h.userInfoService.GetUserInfoById(ctx, userId)
+	if err != nil {
 		v1.HandleError(ctx, http.StatusUnauthorized, v1.ErrUnauthorized, nil)
 		return
 	}
 
-	user, err := h.userInfoService.GetUserInfo(ctx, userId)
+	user, err := h.userInfoService.GetUserInfo(ctx, userinfo.Openid)
 	if err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
 		return

@@ -10,6 +10,7 @@ import (
 
 type UserInfoRepository interface {
 	FirstByOpenId(ctx context.Context, openid string) (*model.UserInfo, error)
+	FirstByUserId(ctx context.Context, userId int64) (*model.UserInfo, error)
 	InsertUserInfo(ctx context.Context, userInfo *model.UserInfo) error
 }
 
@@ -21,6 +22,17 @@ func NewUserInfoRepository(repository *Repository) UserInfoRepository {
 
 type userInfoRepository struct {
 	*Repository
+}
+
+func (r *userInfoRepository) FirstByUserId(ctx context.Context, userId int64) (*model.UserInfo, error) {
+	var userInfo model.UserInfo
+	if err := r.DB(ctx).Where("id = ?", userId).First(&userInfo).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, v1.ErrNotFound
+		}
+		return nil, err
+	}
+	return &userInfo, nil
 }
 
 func (r *userInfoRepository) InsertUserInfo(ctx context.Context, userInfo *model.UserInfo) error {

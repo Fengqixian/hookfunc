@@ -21,6 +21,7 @@ func NewHTTPServer(
 	userHandler *handler.UserHandler,
 	wechatHandler *handler.WechatHandler,
 	goodsHandler *handler.GoodsHandler,
+	userAddressHandler *handler.UserAddressHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(
@@ -70,8 +71,8 @@ func NewHTTPServer(
 		// Strict permission routing group
 		strictAuthRouter := v1.Group("/").Use(middleware.StrictAuth(jwt, logger))
 		{
-			strictAuthRouter.PUT("/user", userHandler.GetProfile)
-
+			strictAuthRouter.GET("/user", userHandler.GetProfile)
+			strictAuthRouter.POST("/user/address/create", userAddressHandler.Create)
 		}
 	}
 

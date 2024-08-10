@@ -8,6 +8,7 @@ import (
 
 type UserInfoService interface {
 	GetUserInfo(ctx context.Context, openid string) (*model.UserInfo, error)
+	GetUserInfoById(ctx context.Context, userId int64) (*model.UserInfo, error)
 	CreateUserInfo(ctx context.Context, userInfo *model.UserInfo) error
 }
 
@@ -21,6 +22,14 @@ func NewUserInfoService(service *Service, userInfoRepository repository.UserInfo
 type userInfoService struct {
 	*Service
 	userInfoRepository repository.UserInfoRepository
+}
+
+func (s *userInfoService) GetUserInfoById(ctx context.Context, userId int64) (*model.UserInfo, error) {
+	userInfo, err := s.userInfoRepository.FirstByUserId(ctx, userId)
+	if err == nil {
+		return userInfo, err
+	}
+	return userInfo, nil
 }
 
 func (s *userInfoService) CreateUserInfo(ctx context.Context, userInfo *model.UserInfo) error {

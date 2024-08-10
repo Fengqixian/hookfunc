@@ -26,6 +26,7 @@ var repositorySet = wire.NewSet(
 	repository.NewResourceRepository,
 	repository.NewUserInfoRepository,
 	repository.NewGoodsRepository,
+	repository.NewUserAddressRepository,
 )
 
 var serviceSet = wire.NewSet(
@@ -34,6 +35,7 @@ var serviceSet = wire.NewSet(
 	service.NewUserInfoService,
 	service.NewWechatService,
 	service.NewGoodsService,
+	service.NewUserAddressService,
 )
 
 var handlerSet = wire.NewSet(
@@ -42,6 +44,7 @@ var handlerSet = wire.NewSet(
 	handler.NewResourceHandler,
 	handler.NewWechatHandler,
 	handler.NewGoodsHandler,
+	handler.NewUserAddressHandler,
 )
 
 var serverSet = wire.NewSet(

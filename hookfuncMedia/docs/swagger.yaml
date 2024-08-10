@@ -29,6 +29,44 @@ definitions:
       message:
         type: string
     type: object
+  v1.UserAddressInfoRequest:
+    properties:
+      addressDetail:
+        description: 详细地址
+        type: string
+      city:
+        description: 市
+        type: string
+      latitude:
+        description: 纬度
+        type: integer
+      longitude:
+        description: 经度
+        type: integer
+      phoneNumber:
+        description: 收获人电话
+        type: string
+      province:
+        description: 省
+        type: string
+      region:
+        description: 区
+        type: string
+      userId:
+        type: integer
+      userName:
+        description: 收获人姓名
+        type: string
+    required:
+    - addressDetail
+    - city
+    - latitude
+    - longitude
+    - phoneNumber
+    - province
+    - region
+    - userName
+    type: object
   v1.WechatProgramLoginRequest:
     properties:
       jsCode:
@@ -105,6 +143,32 @@ paths:
       security:
       - Bearer: []
       summary: 获取用户信息
+      tags:
+      - 用户模块
+  /user/address/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.UserAddressInfoRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 保存收货地址信息
       tags:
       - 用户模块
   /wechat/program/login:

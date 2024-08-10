@@ -32,7 +32,7 @@ func (w wechatService) GetJsCodeToken(context context.Context, params *v1.Wechat
 		return "", err
 	}
 
-	token, err := w.jwt.GenToken(userInfo.Openid, time.Now().Add(time.Hour*24*90))
+	token, err := w.jwt.GenToken(userInfo.ID, time.Now().Add(time.Hour*24*90))
 	if err != nil {
 		return "", err
 	}

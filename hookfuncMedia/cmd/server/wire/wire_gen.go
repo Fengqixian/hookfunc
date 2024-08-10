@@ -40,7 +40,10 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	goodsRepository := repository.NewGoodsRepository(repositoryRepository)
 	goodsService := service.NewGoodsService(serviceService, goodsRepository)
 	goodsHandler := handler.NewGoodsHandler(handlerHandler, goodsService)
-	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, goodsHandler)
+	userAddressRepository := repository.NewUserAddressRepository(repositoryRepository)
+	userAddressService := service.NewUserAddressService(serviceService, userAddressRepository)
+	userAddressHandler := handler.NewUserAddressHandler(handlerHandler, userAddressService)
+	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, goodsHandler, userAddressHandler)
 	job := server.NewJob(logger)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {
@@ -49,11 +52,11 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 // wire.go:
 
-var repositorySet = wire.NewSet(repository.NewWechatMiniProgram, repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewResourceRepository, repository.NewUserInfoRepository, repository.NewGoodsRepository)
+var repositorySet = wire.NewSet(repository.NewWechatMiniProgram, repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewResourceRepository, repository.NewUserInfoRepository, repository.NewGoodsRepository, repository.NewUserAddressRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewResourceService, service.NewUserInfoService, service.NewWechatService, service.NewGoodsService)
+var serviceSet = wire.NewSet(service.NewService, service.NewResourceService, service.NewUserInfoService, service.NewWechatService, service.NewGoodsService, service.NewUserAddressService)
 
-var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewResourceHandler, handler.NewWechatHandler, handler.NewGoodsHandler)
+var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewResourceHandler, handler.NewWechatHandler, handler.NewGoodsHandler, handler.NewUserAddressHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob, server.NewTask)
 
