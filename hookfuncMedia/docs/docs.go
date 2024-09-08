@@ -24,7 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/goods/get": {
+        "/goods/info": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -58,7 +58,7 @@ const docTemplate = `{
             }
         },
         "/goods/list": {
-            "post": {
+            "get": {
                 "consumes": [
                     "application/json"
                 ],

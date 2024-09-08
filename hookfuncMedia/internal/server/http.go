@@ -64,8 +64,8 @@ func NewHTTPServer(
 		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))
 		{
 
-			noStrictAuthRouter.POST("/goods/info", goodsHandler.Get)
-			noStrictAuthRouter.POST("/goods/list", goodsHandler.List)
+			noStrictAuthRouter.POST("/goods/info", goodsHandler.Info)
+			noStrictAuthRouter.GET("/goods/list", goodsHandler.List)
 		}
 
 		// Strict permission routing group

@@ -23,7 +23,7 @@ func NewGoodsHandler(
 	}
 }
 
-// Get godoc
+// Info godoc
 //
 //	@Summary	通过商品ID获取商品信息
 //	@Schemes
@@ -33,8 +33,8 @@ func NewGoodsHandler(
 //	@Produce	json
 //	@Param		request	body		v1.Goods	true	"params"
 //	@Success	200		{object}	v1.Response
-//	@Router		/goods/get [post]
-func (h *GoodsHandler) Get(ctx *gin.Context) {
+//	@Router		/goods/info [POST]
+func (h *GoodsHandler) Info(ctx *gin.Context) {
 	var req v1.Goods
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
@@ -60,7 +60,7 @@ func (h *GoodsHandler) Get(ctx *gin.Context) {
 //	@Accept		json
 //	@Produce	json
 //	@Success	200		{object}	v1.Response
-//	@Router		/goods/list [post]
+//	@Router		/goods/list [GET]
 func (h *GoodsHandler) List(ctx *gin.Context) {
 	response, err := h.goodsService.GetAllGoods(ctx)
 	if err != nil {
