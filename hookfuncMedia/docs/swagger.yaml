@@ -1,4 +1,38 @@
 definitions:
+  model.OrderGoods:
+    properties:
+      amount:
+        description: 商品数量
+        type: integer
+      createTime:
+        description: 创建时间
+        type: string
+      deleted:
+        description: 是否删除
+        type: integer
+      goodsId:
+        description: 商品ID
+        type: integer
+      id:
+        description: 主键ID
+        type: integer
+      orderId:
+        description: 订单ID
+        type: integer
+      price:
+        description: 商品单价
+        type: integer
+      updateTime:
+        description: 更新时间
+        type: string
+    type: object
+  v1.CancelOrderRequest:
+    properties:
+      orderId:
+        type: integer
+    required:
+    - orderId
+    type: object
   v1.GetProfileResponse:
     properties:
       code:
@@ -20,6 +54,25 @@ definitions:
     properties:
       id:
         type: integer
+    type: object
+  v1.PlaceOrderRequest:
+    properties:
+      addressId:
+        type: integer
+      deliveryTime:
+        type: string
+      orderGoods:
+        items:
+          $ref: '#/definitions/model.OrderGoods'
+        type: array
+      remark:
+        type: string
+      userId:
+        type: integer
+    required:
+    - addressId
+    - deliveryTime
+    - orderGoods
     type: object
   v1.Response:
     properties:
@@ -123,6 +176,73 @@ paths:
       summary: 获取所有商品信息
       tags:
       - 商品
+  /order/cancel:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.CancelOrderRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 取消订单
+      tags:
+      - 订单
+  /order/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 历史订单
+      tags:
+      - 订单
+  /order/place:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.PlaceOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 下单
+      tags:
+      - 订单
   /user:
     get:
       consumes:

@@ -43,7 +43,12 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	userAddressRepository := repository.NewUserAddressRepository(repositoryRepository)
 	userAddressService := service.NewUserAddressService(serviceService, userAddressRepository)
 	userAddressHandler := handler.NewUserAddressHandler(handlerHandler, userAddressService)
-	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, goodsHandler, userAddressHandler)
+	orderInfoRepository := repository.NewOrderInfoRepository(repositoryRepository)
+	orderGoodsRepository := repository.NewOrderGoodsRepository(repositoryRepository)
+	orderGoodsService := service.NewOrderGoodsService(serviceService, orderGoodsRepository, goodsService)
+	orderInfoService := service.NewOrderInfoService(serviceService, orderInfoRepository, orderGoodsService)
+	orderInfoHandler := handler.NewOrderInfoHandler(handlerHandler, orderInfoService)
+	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, goodsHandler, userAddressHandler, orderInfoHandler)
 	job := server.NewJob(logger)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {

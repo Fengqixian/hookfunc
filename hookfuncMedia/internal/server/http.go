@@ -22,6 +22,7 @@ func NewHTTPServer(
 	wechatHandler *handler.WechatHandler,
 	goodsHandler *handler.GoodsHandler,
 	userAddressHandler *handler.UserAddressHandler,
+	orderInfoHandler *handler.OrderInfoHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(
@@ -66,6 +67,10 @@ func NewHTTPServer(
 
 			noStrictAuthRouter.POST("/goods/info", goodsHandler.Info)
 			noStrictAuthRouter.GET("/goods/list", goodsHandler.List)
+
+			noStrictAuthRouter.POST("/order/place", orderInfoHandler.Place)
+			noStrictAuthRouter.POST("/order/cancel", orderInfoHandler.Cancel)
+			noStrictAuthRouter.GET("/order/list", orderInfoHandler.List)
 		}
 
 		// Strict permission routing group
@@ -73,6 +78,7 @@ func NewHTTPServer(
 		{
 			strictAuthRouter.GET("/user", userHandler.GetProfile)
 			strictAuthRouter.POST("/user/address/create", userAddressHandler.Create)
+
 		}
 	}
 

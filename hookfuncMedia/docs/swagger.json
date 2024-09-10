@@ -72,6 +72,110 @@
                 }
             }
         },
+        "/order/cancel": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "订单"
+                ],
+                "summary": "取消订单",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.CancelOrderRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "订单"
+                ],
+                "summary": "历史订单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/place": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "订单"
+                ],
+                "summary": "下单",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.PlaceOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "security": [
@@ -205,6 +309,54 @@
         }
     },
     "definitions": {
+        "model.OrderGoods": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "description": "商品数量",
+                    "type": "integer"
+                },
+                "createTime": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted": {
+                    "description": "是否删除",
+                    "type": "integer"
+                },
+                "goodsId": {
+                    "description": "商品ID",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "orderId": {
+                    "description": "订单ID",
+                    "type": "integer"
+                },
+                "price": {
+                    "description": "商品单价",
+                    "type": "integer"
+                },
+                "updateTime": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "v1.CancelOrderRequest": {
+            "type": "object",
+            "required": [
+                "orderId"
+            ],
+            "properties": {
+                "orderId": {
+                    "type": "integer"
+                }
+            }
+        },
         "v1.GetProfileResponse": {
             "type": "object",
             "properties": {
@@ -235,6 +387,34 @@
             "type": "object",
             "properties": {
                 "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.PlaceOrderRequest": {
+            "type": "object",
+            "required": [
+                "addressId",
+                "deliveryTime",
+                "orderGoods"
+            ],
+            "properties": {
+                "addressId": {
+                    "type": "integer"
+                },
+                "deliveryTime": {
+                    "type": "string"
+                },
+                "orderGoods": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.OrderGoods"
+                    }
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "userId": {
                     "type": "integer"
                 }
             }

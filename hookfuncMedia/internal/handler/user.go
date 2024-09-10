@@ -41,7 +41,7 @@ func (h *UserHandler) GetProfile(ctx *gin.Context) {
 
 	user, err := h.userInfoService.GetUserInfo(ctx, userinfo.Openid)
 	if err != nil {
-		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
 	}
 
