@@ -46,7 +46,7 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	orderInfoRepository := repository.NewOrderInfoRepository(repositoryRepository)
 	orderGoodsRepository := repository.NewOrderGoodsRepository(repositoryRepository)
 	orderGoodsService := service.NewOrderGoodsService(serviceService, orderGoodsRepository, goodsService)
-	orderInfoService := service.NewOrderInfoService(serviceService, orderInfoRepository, orderGoodsService)
+	orderInfoService := service.NewOrderInfoService(serviceService, orderInfoRepository, orderGoodsService, goodsService, userAddressRepository)
 	orderInfoHandler := handler.NewOrderInfoHandler(handlerHandler, orderInfoService)
 	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, goodsHandler, userAddressHandler, orderInfoHandler)
 	job := server.NewJob(logger)

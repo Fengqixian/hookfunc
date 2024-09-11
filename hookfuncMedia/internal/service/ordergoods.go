@@ -8,8 +8,9 @@ import (
 )
 
 type OrderGoodsService interface {
-	GetOrderGoods(id int64) (*model.OrderGoods, error)
-	CreateOrderGoods(ctx context.Context, place v1.PlaceOrderRequest, orderId int64) error
+	GetOrderGoods(ctx context.Context, orderId int64) (*[]model.OrderGoods, error)
+	ListOrderGoods(ctx context.Context, orderIds []int64) *[]model.OrderGoods
+	CreateOrderGoods(ctx context.Context, place *v1.PlaceOrderRequest, orderId int64) error
 }
 
 func NewOrderGoodsService(service *Service, orderGoodsRepository repository.OrderGoodsRepository, goodsService GoodsService) OrderGoodsService {
@@ -26,9 +27,19 @@ type orderGoodsService struct {
 	goodsService         GoodsService
 }
 
-func (s *orderGoodsService) CreateOrderGoods(ctx context.Context, place v1.PlaceOrderRequest, orderId int64) error {
+func (s *orderGoodsService) ListOrderGoods(ctx context.Context, orderIds []int64) *[]model.OrderGoods {
+	list, err := s.orderGoodsRepository.ListByOrderIds(ctx, orderIds)
+	if err != nil {
+		res := make([]model.OrderGoods, 0)
+		return &res
+	}
+
+	return list
+}
+
+func (s *orderGoodsService) CreateOrderGoods(ctx context.Context, place *v1.PlaceOrderRequest, orderId int64) error {
 	if len(*place.OrderGoods) == 0 {
-		return v1.ErrRequestParmsFail
+		return v1.ErrRequestParamsFail
 	}
 
 	goodsInfoList, err := s.goodsService.GetGoodsByIds(ctx, *place.OrderGoods)
@@ -56,6 +67,6 @@ func (s *orderGoodsService) CreateOrderGoods(ctx context.Context, place v1.Place
 	return nil
 }
 
-func (s *orderGoodsService) GetOrderGoods(id int64) (*model.OrderGoods, error) {
-	return s.orderGoodsRepository.FirstById(id)
+func (s *orderGoodsService) GetOrderGoods(ctx context.Context, orderId int64) (*[]model.OrderGoods, error) {
+	return s.orderGoodsRepository.ListByOrderId(ctx, orderId)
 }

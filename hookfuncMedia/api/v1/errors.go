@@ -6,6 +6,6 @@ var (
 	ErrUnauthorized = newError(401, "Unauthorized")
 	ErrNotFound     = newError(404, "Not Found")
 
-	ErrRequestParmsFail = newError(50000, "请求参数错误")
-	ErrPlaceAnOrderFail = newError(50001, "下单失败")
+	ErrRequestParamsFail = newError(50000, "请求参数错误")
+	ErrPlaceAnOrderFail  = newError(50001, "下单失败")
 )

@@ -124,20 +124,11 @@
                     "订单"
                 ],
                 "summary": "历史订单",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v1.Response"
+                            "$ref": "#/definitions/v1.OrderInfoResponse"
                         }
                     }
                 }
@@ -164,6 +155,13 @@
                         "schema": {
                             "$ref": "#/definitions/v1.PlaceOrderRequest"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -388,6 +386,99 @@
             "properties": {
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "v1.OrderGoods": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "description": "商品数量",
+                    "type": "integer"
+                },
+                "goodsId": {
+                    "description": "商品ID",
+                    "type": "integer"
+                },
+                "goodsName": {
+                    "description": "商品名称",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "单价",
+                    "type": "integer"
+                },
+                "total": {
+                    "description": "商品金额",
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.OrderInfoResponse": {
+            "type": "object",
+            "properties": {
+                "addressDetail": {
+                    "description": "详细地址",
+                    "type": "string"
+                },
+                "city": {
+                    "description": "市",
+                    "type": "string"
+                },
+                "goods": {
+                    "description": "商品列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v1.OrderGoods"
+                    }
+                },
+                "latitude": {
+                    "description": "纬度",
+                    "type": "integer"
+                },
+                "longitude": {
+                    "description": "经度",
+                    "type": "integer"
+                },
+                "orderId": {
+                    "description": "订单ID",
+                    "type": "integer"
+                },
+                "orderState": {
+                    "description": "订单状态",
+                    "type": "integer"
+                },
+                "paymentModel": {
+                    "description": "支付方式",
+                    "type": "integer"
+                },
+                "phoneNumber": {
+                    "description": "收获人电话",
+                    "type": "string"
+                },
+                "placeTime": {
+                    "description": "下单时间",
+                    "type": "string"
+                },
+                "province": {
+                    "description": "省",
+                    "type": "string"
+                },
+                "region": {
+                    "description": "区",
+                    "type": "string"
+                },
+                "remark": {
+                    "description": "订单备注",
+                    "type": "string"
+                },
+                "total": {
+                    "description": "订单金额",
+                    "type": "integer"
+                },
+                "userName": {
+                    "description": "收获人姓名",
+                    "type": "string"
                 }
             }
         },

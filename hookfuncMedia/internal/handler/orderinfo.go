@@ -28,6 +28,7 @@ func NewOrderInfoHandler(handler *Handler, orderInfoService service.OrderInfoSer
 //	@Accept		json
 //	@Produce	json
 //	@Param		request	body		v1.PlaceOrderRequest	true	"params"
+//	@Param		Authorization	header		string	true	"Authorization token"
 //	@Success	200		{object}	v1.Response
 //	@Router		/order/place [POST]
 func (h *OrderInfoHandler) Place(ctx *gin.Context) {
@@ -38,7 +39,7 @@ func (h *OrderInfoHandler) Place(ctx *gin.Context) {
 	}
 
 	req.UserId = GetUserIdFromCtx(ctx)
-	order, err := h.orderInfoService.PlaceAnOrder(ctx, req)
+	order, err := h.orderInfoService.PlaceAnOrder(ctx, &req)
 	if err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
@@ -77,10 +78,9 @@ func (h *OrderInfoHandler) Cancel(ctx *gin.Context) {
 //	@Tags		订单
 //	@Accept		json
 //	@Produce	json
-//	@Success	200		{object}	v1.Response
-//	@Param		Authorization	header		string	true	"Authorization token"
+//	@Success	200		{object}	v1.OrderInfoResponse
 //	@Router		/order/list [GET]
 func (h *OrderInfoHandler) List(ctx *gin.Context) {
-
-	v1.HandleSuccess(ctx, nil)
+	userId := GetUserIdFromCtx(ctx)
+	v1.HandleSuccess(ctx, h.orderInfoService.ListOrder(ctx, userId))
 }
