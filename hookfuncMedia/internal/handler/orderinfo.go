@@ -67,6 +67,12 @@ func (h *OrderInfoHandler) Cancel(ctx *gin.Context) {
 		return
 	}
 
+	err := h.orderInfoService.CancelOrder(ctx, req.OrderId)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		return
+	}
+
 	v1.HandleSuccess(ctx, nil)
 }
 
@@ -79,6 +85,7 @@ func (h *OrderInfoHandler) Cancel(ctx *gin.Context) {
 //	@Accept		json
 //	@Produce	json
 //	@Success	200		{object}	v1.OrderInfoResponse
+//	@Param		Authorization	header		string	true	"Authorization token"
 //	@Router		/order/list [GET]
 func (h *OrderInfoHandler) List(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)

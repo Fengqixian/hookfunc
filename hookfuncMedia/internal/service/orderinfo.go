@@ -16,6 +16,7 @@ type OrderInfoService interface {
 	ListOrder(ctx context.Context, userId int64) []v1.OrderInfoResponse
 	GetOrderGoodsDetail(ctx context.Context, orderId int64) *[]v1.OrderGoods
 	MapOrderGoodsDetail(ctx context.Context, orders *[]model.OrderInfo) map[int64][]v1.OrderGoods
+	CancelOrder(ctx context.Context, orderId int64) error
 }
 
 func NewOrderInfoService(service *Service, orderInfoRepository repository.OrderInfoRepository, orderGoodsService OrderGoodsService, goodsService GoodsService, userAddressRepository repository.UserAddressRepository) OrderInfoService {
@@ -34,6 +35,20 @@ type orderInfoService struct {
 	orderGoodsService     OrderGoodsService
 	goodsService          GoodsService
 	userAddressRepository repository.UserAddressRepository
+}
+
+func (s *orderInfoService) CancelOrder(ctx context.Context, orderId int64) error {
+	order := model.OrderInfo{
+		ID:         orderId,
+		Orderstate: 1,
+	}
+
+	err := s.orderInfoRepository.UpdateOrder(ctx, &order)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *orderInfoService) MapOrderGoodsDetail(ctx context.Context, orders *[]model.OrderInfo) map[int64][]v1.OrderGoods {

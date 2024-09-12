@@ -9,6 +9,7 @@ type OrderInfoRepository interface {
 	FirstById(id int64) (*model.OrderInfo, error)
 	CreateOrder(ctx context.Context, order *model.OrderInfo) (*model.OrderInfo, error)
 	GetAllOrderByUserId(ctx context.Context, userId int64) (*[]model.OrderInfo, error)
+	UpdateOrder(ctx context.Context, order *model.OrderInfo) error
 }
 
 func NewOrderInfoRepository(repository *Repository) OrderInfoRepository {
@@ -28,6 +29,14 @@ func (r *orderInfoRepository) GetAllOrderByUserId(ctx context.Context, userId in
 	}
 
 	return &list, nil
+}
+
+func (r *orderInfoRepository) UpdateOrder(ctx context.Context, order *model.OrderInfo) error {
+	if err := r.DB(ctx).Updates(order).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *orderInfoRepository) CreateOrder(ctx context.Context, order *model.OrderInfo) (*model.OrderInfo, error) {

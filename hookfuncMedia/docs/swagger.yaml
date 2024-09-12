@@ -119,6 +119,9 @@ definitions:
       total:
         description: 订单金额
         type: integer
+      userId:
+        description: 用户ID
+        type: integer
       userName:
         description: 收获人姓名
         type: string
@@ -255,11 +258,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/v1.CancelOrderRequest'
-      - description: Authorization token
-        in: header
-        name: Authorization
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -274,6 +272,12 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
