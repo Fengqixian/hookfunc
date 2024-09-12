@@ -6,7 +6,7 @@ import (
 )
 
 type OrderInfoRepository interface {
-	FirstById(id int64) (*model.OrderInfo, error)
+	FirstById(ctx context.Context, id int64) (*model.OrderInfo, error)
 	CreateOrder(ctx context.Context, order *model.OrderInfo) (*model.OrderInfo, error)
 	GetAllOrderByUserId(ctx context.Context, userId int64) (*[]model.OrderInfo, error)
 	UpdateOrder(ctx context.Context, order *model.OrderInfo) error
@@ -47,8 +47,11 @@ func (r *orderInfoRepository) CreateOrder(ctx context.Context, order *model.Orde
 	return order, nil
 }
 
-func (r *orderInfoRepository) FirstById(id int64) (*model.OrderInfo, error) {
+func (r *orderInfoRepository) FirstById(ctx context.Context, id int64) (*model.OrderInfo, error) {
 	var orderInfo model.OrderInfo
-	// TODO: query db
+	if err := r.DB(ctx).Where("id = ?", id).First(&orderInfo).Error; err != nil {
+		return nil, err
+	}
+
 	return &orderInfo, nil
 }

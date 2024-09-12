@@ -67,7 +67,13 @@ func (h *OrderInfoHandler) Cancel(ctx *gin.Context) {
 		return
 	}
 
-	err := h.orderInfoService.CancelOrder(ctx, req.OrderId)
+	orderInfo, err := h.orderInfoService.GetOrderInfo(ctx, req.OrderId)
+	if err != nil || orderInfo.UserID != GetUserIdFromCtx(ctx) {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		return
+	}
+
+	err = h.orderInfoService.CancelOrder(ctx, req.OrderId)
 	if err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
 		return

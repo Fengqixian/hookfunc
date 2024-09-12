@@ -11,7 +11,7 @@ import (
 )
 
 type OrderInfoService interface {
-	GetOrderInfo(id int64) (*model.OrderInfo, error)
+	GetOrderInfo(ctx context.Context, id int64) (*model.OrderInfo, error)
 	PlaceAnOrder(ctx context.Context, place *v1.PlaceOrderRequest) (*model.OrderInfo, error)
 	ListOrder(ctx context.Context, userId int64) []v1.OrderInfoResponse
 	GetOrderGoodsDetail(ctx context.Context, orderId int64) *[]v1.OrderGoods
@@ -152,6 +152,6 @@ func (s *orderInfoService) PlaceAnOrder(ctx context.Context, place *v1.PlaceOrde
 	return order, nil
 }
 
-func (s *orderInfoService) GetOrderInfo(id int64) (*model.OrderInfo, error) {
-	return s.orderInfoRepository.FirstById(id)
+func (s *orderInfoService) GetOrderInfo(ctx context.Context, id int64) (*model.OrderInfo, error) {
+	return s.orderInfoRepository.FirstById(ctx, id)
 }
