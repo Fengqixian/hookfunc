@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"hookfunc-media/internal/model"
 	"hookfunc-media/internal/repository"
+	"math/rand"
+	"time"
 )
 
 type UserInfoService interface {
@@ -22,6 +25,37 @@ func NewUserInfoService(service *Service, userInfoRepository repository.UserInfo
 type userInfoService struct {
 	*Service
 	userInfoRepository repository.UserInfoRepository
+}
+
+var vegetables = []string{
+	"番茄", "胡萝卜", "黄瓜", "青椒", "西兰花",
+	"菠菜", "生菜", "南瓜", "白萝卜", "卷心菜",
+	"茄子", "芹菜", "冬瓜", "小葱", "大蒜",
+	"姜", "香菜", "菜花", "苦瓜", "竹笋",
+	"豆角", "豌豆", "玉米", "花菜", "蘑菇",
+	"洋葱", "韭菜", "辣椒", "大白菜", "红薯",
+	"土豆", "青菜", "油菜", "紫甘蓝", "莴笋",
+}
+
+// 后缀汉字列表
+var suffixes = []string{"君", "酱", "萌"}
+
+// 生成随机昵称的函数
+func generateNickname() string {
+	// 设定随机种子
+	rand.Seed(time.Now().UnixNano())
+
+	// 随机选择一个蔬菜名称
+	vegetable := vegetables[rand.Intn(len(vegetables))]
+
+	// 随机选择一个后缀汉字
+	suffix := suffixes[rand.Intn(len(suffixes))]
+
+	// 生成一个随机数作为后缀
+	number := rand.Intn(100) // 生成 0-99 的随机数
+
+	// 组合生成昵称
+	return fmt.Sprintf("%s%s_%d", vegetable, suffix, number)
 }
 
 func (s *userInfoService) GetUserInfoById(ctx context.Context, userId int64) (*model.UserInfo, error) {
@@ -49,7 +83,7 @@ func (s *userInfoService) GetUserInfo(ctx context.Context, openid string) (*mode
 
 	newUser := &model.UserInfo{
 		Openid:   openid,
-		NickName: "test",
+		NickName: generateNickname(),
 		Avatar:   "https://cdn.learnku.com/uploads/images/201805/11/1/ZnrA2VK0SN.png!/both/200x200",
 	}
 
