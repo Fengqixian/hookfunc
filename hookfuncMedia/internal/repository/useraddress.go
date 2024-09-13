@@ -61,6 +61,9 @@ func (r *userAddressRepository) Insert(ctx context.Context, address *model.UserA
 
 func (r *userAddressRepository) GetUserAddress(ctx context.Context, id int64) (*model.UserAddressInfo, error) {
 	var userAddress model.UserAddressInfo
+	if err := r.DB(ctx).Where("id = ?", id).First(&userAddress).Error; err != nil {
+		return nil, err
+	}
 
 	return &userAddress, nil
 }
