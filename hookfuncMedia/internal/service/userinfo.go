@@ -42,17 +42,16 @@ var suffixes = []string{"君", "酱", "萌"}
 
 // 生成随机昵称的函数
 func generateNickname() string {
-	// 设定随机种子
-	rand.Seed(time.Now().UnixNano())
-
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
 	// 随机选择一个蔬菜名称
-	vegetable := vegetables[rand.Intn(len(vegetables))]
+	vegetable := vegetables[rng.Intn(len(vegetables))]
 
 	// 随机选择一个后缀汉字
-	suffix := suffixes[rand.Intn(len(suffixes))]
+	suffix := suffixes[rng.Intn(len(suffixes))]
 
 	// 生成一个随机数作为后缀
-	number := rand.Intn(100) // 生成 0-99 的随机数
+	number := rng.Intn(100) // 生成 0-99 的随机数
 
 	// 组合生成昵称
 	return fmt.Sprintf("%s%s_%d", vegetable, suffix, number)
