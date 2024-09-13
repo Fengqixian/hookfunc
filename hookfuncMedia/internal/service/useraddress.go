@@ -9,6 +9,8 @@ import (
 )
 
 type UserAddressService interface {
+	UpdateAddress(ctx context.Context, params *model.UserAddressInfo) error
+	ListUserAddresses(ctx context.Context, userId int64) (*[]model.UserAddressInfo, error)
 	GetUserAddress(ctx context.Context, id int64) (*model.UserAddressInfo, error)
 	CreateUserAddress(ctx context.Context, params *v1.UserAddressInfoRequest) (*model.UserAddressInfo, error)
 }
@@ -26,6 +28,14 @@ func NewUserAddressService(
 type userAddressService struct {
 	*Service
 	userAddressRepository repository.UserAddressRepository
+}
+
+func (s *userAddressService) UpdateAddress(ctx context.Context, params *model.UserAddressInfo) error {
+	return s.userAddressRepository.Update(ctx, params)
+}
+
+func (s *userAddressService) ListUserAddresses(ctx context.Context, userId int64) (*[]model.UserAddressInfo, error) {
+	return s.userAddressRepository.ListUserAddresses(ctx, userId)
 }
 
 func (s *userAddressService) CreateUserAddress(ctx context.Context, params *v1.UserAddressInfoRequest) (*model.UserAddressInfo, error) {

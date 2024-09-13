@@ -100,6 +100,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/v1.CancelOrderRequest"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -259,6 +266,61 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/address/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "收货地址列表",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.UserAddressInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/address/update": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "更新收货地址信息",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.UserAddressInfoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/wechat/program/login": {
             "post": {
                 "consumes": [
@@ -349,6 +411,67 @@ const docTemplate = `{
                 },
                 "updateTime": {
                     "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "model.UserAddressInfo": {
+            "type": "object",
+            "properties": {
+                "addressDetail": {
+                    "description": "详细地址",
+                    "type": "string"
+                },
+                "city": {
+                    "description": "市",
+                    "type": "string"
+                },
+                "createTime": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "defaultState": {
+                    "description": "是否默认地址",
+                    "type": "integer"
+                },
+                "deleted": {
+                    "description": "是否删除",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "latitude": {
+                    "description": "纬度",
+                    "type": "integer"
+                },
+                "longitude": {
+                    "description": "经度",
+                    "type": "integer"
+                },
+                "phoneNumber": {
+                    "description": "收获人电话",
+                    "type": "string"
+                },
+                "province": {
+                    "description": "省",
+                    "type": "string"
+                },
+                "region": {
+                    "description": "区",
+                    "type": "string"
+                },
+                "updateTime": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "userId": {
+                    "description": "用户ID",
+                    "type": "integer"
+                },
+                "userName": {
+                    "description": "收获人姓名",
                     "type": "string"
                 }
             }

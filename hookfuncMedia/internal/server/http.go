@@ -71,6 +71,9 @@ func NewHTTPServer(
 			noStrictAuthRouter.POST("/order/place", orderInfoHandler.Place)
 			noStrictAuthRouter.POST("/order/cancel", orderInfoHandler.Cancel)
 			noStrictAuthRouter.GET("/order/list", orderInfoHandler.List)
+
+			noStrictAuthRouter.GET("/user/address/list", userAddressHandler.List)
+			noStrictAuthRouter.POST("/user/address/update", userAddressHandler.Update)
 		}
 
 		// Strict permission routing group
