@@ -36,11 +36,10 @@ jobs:
           connect_timeout: 10s
           first_ssh: |-
             echo $WELCOME  &&
-          scp: |-
+          #scp: |-
+          last_ssh: |-
             docker stop hookfunc &&  
             docker rm hookfunc &&
             docker rmi fengqixian1996/hookfunc:latest &&
             docker pull fengqixian1996/hookfunc:latest &&
             docker run -dit --restart=always  --name hookfunc -v /logs/hookfunc/:/data/app/storage/logs -p 8000:8000 fengqixian1996/hookfunc:latest &&
-          last_ssh: |-
-            ls -la  
