@@ -9,7 +9,6 @@ WORKDIR /data/app/hookfuncMedia/
 
 RUN rm -rf /data/app/bin/
 RUN export GOPROXY=https://goproxy.cn,direct
-RUN go env
 RUN go mod tidy
 RUN go build -ldflags="-s -w" -o ./bin/server ${APP_RELATIVE_PATH}
 RUN mv config /data/app/bin/
@@ -29,7 +28,7 @@ ENV APP_ENV=${APP_ENV}
 
 WORKDIR /data/app
 COPY --from=builder /data/app/hookfuncMedia/bin /data/app
-
+RUN ls -la
 EXPOSE 8000
 ENTRYPOINT [ "./server" ]
 
