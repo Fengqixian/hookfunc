@@ -4,14 +4,11 @@ RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk
 
 ARG APP_RELATIVE_PATH
 
-COPY .. /data/app/
-WORKDIR /data/app/
+COPY .. /data/app
+WORKDIR /data/app
 
 RUN rm -rf /data/app/bin/
-RUN export GOPROXY=https://goproxy.cn,direct
-RUN go mod tidy
-RUN ls -la
-RUN go build -ldflags="-s -w" -o ./bin/server ${APP_RELATIVE_PATH}
+RUN export GOPROXY=https://goproxy.cn,direct && go mod tidy && go build -ldflags="-s -w" -o ./bin/server ${APP_RELATIVE_PATH}
 RUN mv config /data/app/bin/
 
 
