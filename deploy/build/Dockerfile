@@ -24,8 +24,8 @@ RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && apk del tzdata
 
 
-ARG APP_ENV
-ENV APP_ENV=${APP_ENV}
+ARG APP_CONF
+ENV APP_CONF=${APP_CONF}
 
 WORKDIR /data/app
 COPY --from=builder /data/app/bin /data/app
