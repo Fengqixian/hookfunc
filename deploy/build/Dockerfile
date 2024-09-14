@@ -29,7 +29,7 @@ ENV APP_ENV=${APP_ENV}
 
 WORKDIR /data/app
 COPY --from=builder /data/app/bin /data/app
-RUN ls -la
+RUN ls -l
 EXPOSE 8000
 ENTRYPOINT [ "./server" ]
 
