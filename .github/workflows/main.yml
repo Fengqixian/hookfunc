@@ -28,5 +28,5 @@ jobs:
           context: ./
           file: ./hookfuncMedia/deploy/build/Dockerfile
           push: true
-          tags: fengqixian1996/hookfunc:${{ steps.vars.outputs.tag }}
+          tags: fengqixian1996/hookfunc:latest
         
