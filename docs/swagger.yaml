@@ -1,0 +1,484 @@
+definitions:
+  model.OrderGoods:
+    properties:
+      amount:
+        description: 商品数量
+        type: integer
+      createTime:
+        description: 创建时间
+        type: string
+      deleted:
+        description: 是否删除
+        type: integer
+      goodsId:
+        description: 商品ID
+        type: integer
+      id:
+        description: 主键ID
+        type: integer
+      orderId:
+        description: 订单ID
+        type: integer
+      price:
+        description: 商品单价
+        type: integer
+      updateTime:
+        description: 更新时间
+        type: string
+    type: object
+  model.UserAddressInfo:
+    properties:
+      addressDetail:
+        description: 详细地址
+        type: string
+      city:
+        description: 市
+        type: string
+      createTime:
+        description: 创建时间
+        type: string
+      defaultState:
+        description: 是否默认地址
+        type: integer
+      deleted:
+        description: 是否删除
+        type: integer
+      id:
+        description: 主键ID
+        type: integer
+      latitude:
+        description: 纬度
+        type: integer
+      longitude:
+        description: 经度
+        type: integer
+      phoneNumber:
+        description: 收获人电话
+        type: string
+      province:
+        description: 省
+        type: string
+      region:
+        description: 区
+        type: string
+      updateTime:
+        description: 更新时间
+        type: string
+      userId:
+        description: 用户ID
+        type: integer
+      userName:
+        description: 收获人姓名
+        type: string
+    type: object
+  v1.CancelOrderRequest:
+    properties:
+      orderId:
+        type: integer
+    required:
+    - orderId
+    type: object
+  v1.GetProfileResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/v1.GetProfileResponseData'
+      message:
+        type: string
+    type: object
+  v1.GetProfileResponseData:
+    properties:
+      nickname:
+        example: alan
+        type: string
+      userId:
+        type: string
+    type: object
+  v1.Goods:
+    properties:
+      id:
+        type: integer
+    type: object
+  v1.OrderGoods:
+    properties:
+      amount:
+        description: 商品数量
+        type: integer
+      goodsId:
+        description: 商品ID
+        type: integer
+      goodsName:
+        description: 商品名称
+        type: string
+      price:
+        description: 单价
+        type: integer
+      total:
+        description: 商品金额
+        type: integer
+    type: object
+  v1.OrderInfoResponse:
+    properties:
+      addressDetail:
+        description: 详细地址
+        type: string
+      city:
+        description: 市
+        type: string
+      goods:
+        description: 商品列表
+        items:
+          $ref: '#/definitions/v1.OrderGoods'
+        type: array
+      latitude:
+        description: 纬度
+        type: integer
+      longitude:
+        description: 经度
+        type: integer
+      orderId:
+        description: 订单ID
+        type: integer
+      orderState:
+        description: 订单状态
+        type: integer
+      paymentModel:
+        description: 支付方式
+        type: integer
+      phoneNumber:
+        description: 收获人电话
+        type: string
+      placeTime:
+        description: 下单时间
+        type: string
+      province:
+        description: 省
+        type: string
+      region:
+        description: 区
+        type: string
+      remark:
+        description: 订单备注
+        type: string
+      total:
+        description: 订单金额
+        type: integer
+      userId:
+        description: 用户ID
+        type: integer
+      userName:
+        description: 收获人姓名
+        type: string
+    type: object
+  v1.PlaceOrderRequest:
+    properties:
+      addressId:
+        type: integer
+      deliveryTime:
+        type: string
+      orderGoods:
+        items:
+          $ref: '#/definitions/model.OrderGoods'
+        type: array
+      remark:
+        type: string
+      userId:
+        type: integer
+    required:
+    - addressId
+    - deliveryTime
+    - orderGoods
+    type: object
+  v1.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+  v1.UserAddressInfoRequest:
+    properties:
+      addressDetail:
+        description: 详细地址
+        type: string
+      city:
+        description: 市
+        type: string
+      latitude:
+        description: 纬度
+        type: integer
+      longitude:
+        description: 经度
+        type: integer
+      phoneNumber:
+        description: 收获人电话
+        type: string
+      province:
+        description: 省
+        type: string
+      region:
+        description: 区
+        type: string
+      userId:
+        type: integer
+      userName:
+        description: 收获人姓名
+        type: string
+    required:
+    - addressDetail
+    - city
+    - latitude
+    - longitude
+    - phoneNumber
+    - province
+    - region
+    - userName
+    type: object
+  v1.WechatProgramLoginRequest:
+    properties:
+      jsCode:
+        type: string
+    required:
+    - jsCode
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Nunu Example API
+  version: 1.0.0
+paths:
+  /goods/info:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.Goods'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 通过商品ID获取商品信息
+      tags:
+      - 商品
+  /goods/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 获取所有商品信息
+      tags:
+      - 商品
+  /order/cancel:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.CancelOrderRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 取消订单
+      tags:
+      - 订单
+  /order/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.OrderInfoResponse'
+      summary: 历史订单
+      tags:
+      - 订单
+  /order/place:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.PlaceOrderRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 下单
+      tags:
+      - 订单
+  /user:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.GetProfileResponse'
+      security:
+      - Bearer: []
+      summary: 获取用户信息
+      tags:
+      - 用户模块
+  /user/address/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.UserAddressInfoRequest'
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 保存收货地址信息
+      tags:
+      - 用户模块
+  /user/address/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserAddressInfo'
+      summary: 收货地址列表
+      tags:
+      - 用户模块
+  /user/address/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.UserAddressInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 更新收货地址信息
+      tags:
+      - 用户模块
+  /wechat/program/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.WechatProgramLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 微信小程序用户登录
+      tags:
+      - 微信小程序
+  /wechat/qr/login:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.Response'
+      summary: 微信小程序登录二维码
+      tags:
+      - 微信小程序
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

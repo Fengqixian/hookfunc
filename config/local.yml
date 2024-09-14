@@ -1,0 +1,32 @@
+env: local
+http:
+  host: 0.0.0.0
+  port: 8000
+security:
+  api_sign:
+    app_key: 123456
+    app_security: 123456
+  jwt:
+    key: QQYnRFerJTSEcrfB89fw8prOaObmrch8
+data:
+  mysql:
+    user: root:WZkYigvhY99QRFGB6@tcp(117.72.44.89:13306)/test_db?charset=utf8mb4&parseTime=True&loc=Local
+  redis:
+    addr: 117.72.44.89:6379
+    password: "twfw343@#143!"
+    db: 0
+    read_timeout: 0.5s
+    write_timeout: 0.5s
+
+log:
+  log_level: debug
+  encoding: console           # json or console
+  log_file_name: "./storage/logs/server.log"
+  max_backups: 30
+  max_age: 7
+  max_size: 1024
+  compress: true
+
+wechat:
+  appid: wxa989f082a8f94570
+  secret: bd89cec8ab81c32383a606e1cdf3faea
