@@ -19,6 +19,7 @@ jobs:
           tags: v1, latest
           registry: docker.io
           dockerfile: ./hookfuncMedia/deploy/build/Dockerfile
+          buildArgs: APP_CONF=config/prod.yml,APP_RELATIVE_PATH=./cmd/server/...
           username: ${{ secrets.DOCKER_USER_NAME }}
           password: ${{ secrets.DOCKER_USER_PASSWORD }}
         
