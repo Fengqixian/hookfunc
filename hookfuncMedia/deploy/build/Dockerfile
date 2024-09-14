@@ -28,7 +28,7 @@ ARG APP_ENV
 ENV APP_ENV=${APP_ENV}
 
 WORKDIR /data/app
-COPY --from=builder /data/app/bin /data/app/hookfuncMedia
+COPY --from=builder /data/app/bin /data/app
 
 EXPOSE 8000
 ENTRYPOINT [ "./server" ]
