@@ -8,6 +8,7 @@ import (
 	"hookfunc/cmd/server/wire"
 	"hookfunc/pkg/config"
 	"hookfunc/pkg/log"
+	"os"
 )
 
 // @title						Nunu Example API
@@ -37,6 +38,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	appConf := os.Getenv("APP_CONF")
+	if appConf != "" {
+		logger.Info("server use config", zap.String("config name", appConf))
+	}
+
 	logger.Info("server start", zap.String("host", "http://127.0.0.1:"+conf.GetString("http.port")))
 	logger.Info("docs addr", zap.String("addr", fmt.Sprintf("http://127.0.0.1:%d/swagger/index.html", conf.GetInt("http.port"))))
 	if err = app.Run(context.Background()); err != nil {
