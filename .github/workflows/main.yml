@@ -15,8 +15,8 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v6
         name: Build & push Docker image
         with:
-          image: repo/image
-          tags: v1, latest
+          image: fengqixian1996/hookfunc
+          tags: latest
           registry: docker.io
           dockerfile: ./hookfuncMedia/deploy/build/Dockerfile
           buildArgs: APP_CONF=config/prod.yml,APP_RELATIVE_PATH=./cmd/server/...
