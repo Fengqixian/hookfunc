@@ -131,15 +131,6 @@ const docTemplate = `{
                     "订单"
                 ],
                 "summary": "历史订单",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",

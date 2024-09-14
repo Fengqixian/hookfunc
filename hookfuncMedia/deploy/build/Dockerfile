@@ -8,7 +8,7 @@ COPY .. /data/app
 WORKDIR /data/app
 
 RUN rm -rf /data/app/bin/
-RUN export GOPROXY=https://goproxy.cn,direct && go mod tidy && go build -ldflags="-s -w" -o ./bin/server ${APP_RELATIVE_PATH}
+RUN export GOPROXY=https://goproxy.cn,direct && go mod tidy && go build -ldflags="-s -w" -o ./bin/server ./cmd/server/...
 RUN mv config /data/app/bin/
 
 

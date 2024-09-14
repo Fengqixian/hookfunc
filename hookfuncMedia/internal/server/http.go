@@ -36,7 +36,6 @@ func NewHTTPServer(
 	docs.SwaggerInfo.BasePath = "/v1"
 	s.GET("/swagger/*any", ginSwagger.WrapHandler(
 		swaggerfiles.Handler,
-		//ginSwagger.URL(fmt.Sprintf("http://localhost:%d/swagger/doc.json", conf.GetInt("app.http.port"))),
 		ginSwagger.DefaultModelsExpandDepth(-1),
 	))
 
@@ -62,7 +61,7 @@ func NewHTTPServer(
 			noAuthRouter.POST("/wechat/program/login", wechatHandler.ProgramLogin)
 		}
 		// Non-strict permission routing group
-		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))
+		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger), middleware.UserRole(logger))
 		{
 
 			noStrictAuthRouter.POST("/goods/info", goodsHandler.Info)

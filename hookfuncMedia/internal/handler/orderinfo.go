@@ -91,7 +91,6 @@ func (h *OrderInfoHandler) Cancel(ctx *gin.Context) {
 //	@Accept		json
 //	@Produce	json
 //	@Success	200		{object}	v1.OrderInfoResponse
-//	@Param		Authorization	header		string	true	"Authorization token"
 //	@Router		/order/list [GET]
 func (h *OrderInfoHandler) List(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
