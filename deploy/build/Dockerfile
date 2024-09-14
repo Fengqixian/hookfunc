@@ -11,7 +11,6 @@ RUN rm -rf /data/app/bin/
 RUN export GOPROXY=https://goproxy.cn,direct
 RUN go mod tidy
 RUN mkdir -p ./bin/server
-RUN ls -la
 RUN go build -ldflags="-s -w" -o ./bin/server ${APP_RELATIVE_PATH}
 RUN mv config /data/app/bin/
 
@@ -30,7 +29,7 @@ ENV APP_ENV=${APP_ENV}
 
 WORKDIR /data/app
 COPY --from=builder /data/app/bin /data/app
-
+RUN ls -la
 EXPOSE 8000
 ENTRYPOINT [ "./server" ]
 
