@@ -17,7 +17,7 @@ jobs:
         with:
           image: repo/image
           tags: v1, latest
-          registry: registry-url.io
+          registry: docker.io
           dockerfile: Dockerfile
           directory: ./hookfuncMedia/deploy/build/
           username: ${{ secrets.DOCKER_USER_NAME }}
