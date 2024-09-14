@@ -4,9 +4,10 @@ RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk
 
 ARG APP_RELATIVE_PATH
 
-COPY .. /data/app/hookfuncMedia/
+COPY .. /data/app/
 WORKDIR /data/app
 
+RUN cd hookfuncMedia
 RUN rm -rf /data/app/bin/
 RUN export GOPROXY=https://goproxy.cn,direct
 RUN ls -la
