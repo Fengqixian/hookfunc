@@ -9,6 +9,8 @@ WORKDIR /data/app
 
 RUN rm -rf /data/app/bin/
 RUN export GOPROXY=https://goproxy.cn,direct
+RUN ls -la
+RUN go env
 RUN go mod tidy
 RUN go build -ldflags="-s -w" -o ./bin/server ${APP_RELATIVE_PATH}
 RUN mv config /data/app/bin/
