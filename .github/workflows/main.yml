@@ -36,11 +36,12 @@ jobs:
           connect_timeout: 10s
           first_ssh: |-
             echo $WELCOME   
-            mkdir -p /home/github/test/test1 &&    
-            mkdir -p /home/github/test/test2 &&
           scp: |-
-            './test/*' => /home/github/test/
+            docker stop hookfunc &&  
+            docker rm hookfunc &&
+            docker rmi fengqixian1996/hookfunc:latest &&
+            docker pull fengqixian1996/hookfunc:latest &&
+            docker run -dit --restart=always  --name hookfunc -v /logs/hookfunc/:/data/app/storage/logs -p 8000:8000 fengqixian1996/hookfunc:latest
           last_ssh: |-
             echo $LASTSSH &&
-            (mkdir test1/test || true)
             ls -la  
