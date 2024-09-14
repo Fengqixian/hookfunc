@@ -12,6 +12,7 @@ RUN export GOPROXY=https://goproxy.cn,direct
 RUN ls -la
 RUN go env
 RUN go mod tidy
+RUN mkdir -p /bin/server
 RUN go build -ldflags="-s -w" -o ./bin/server ${APP_RELATIVE_PATH}
 RUN mv config /data/app/bin/
 
