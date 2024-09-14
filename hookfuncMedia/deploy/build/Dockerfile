@@ -4,7 +4,7 @@ RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk
 
 ARG APP_RELATIVE_PATH
 
-COPY .. /data/app
+COPY .. /data/app/hookfuncMedia
 WORKDIR /data/app
 
 RUN rm -rf /data/app/bin/
