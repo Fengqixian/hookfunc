@@ -28,6 +28,7 @@ ARG APP_ENV
 ENV APP_ENV=${APP_ENV}
 
 WORKDIR /data/app
+RUN ls -la
 COPY --from=builder /data/app/bin /data/app
 
 EXPOSE 8000
