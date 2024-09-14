@@ -7,7 +7,6 @@ ARG APP_RELATIVE_PATH
 COPY .. /data/app/
 WORKDIR /data/app/hookfuncMedia/
 
-RUN cd hookfuncMedia
 RUN rm -rf /data/app/bin/
 RUN export GOPROXY=https://goproxy.cn,direct
 RUN ls -la
