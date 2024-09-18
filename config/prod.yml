@@ -1,13 +1,13 @@
-env: local
+env: prod
 http:
   host: 0.0.0.0
   port: 8000
 security:
   api_sign:
-    app_key: 123456
-    app_security: 123456
+    app_key: NKC75w64O3
+    app_security: lYFgNlBib0uLVMBF6uxz
   jwt:
-    key: QQYnRFerJTSEcrfB89fw8prOaObmrch8
+    key: deZkojrxQWQSy9nP7GgjYaMRby7mFwcVu
 data:
   mysql:
     user: root:WZkYigvhY99QRFGB6@tcp(117.72.44.89:13306)/test_db?charset=utf8mb4&parseTime=True&loc=Local
@@ -19,7 +19,7 @@ data:
     write_timeout: 0.5s
 
 log:
-  log_level: debug
+  log_level: info
   encoding: console           # json or console
   log_file_name: "./storage/logs/server.log"
   max_backups: 30
