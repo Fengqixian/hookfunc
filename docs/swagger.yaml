@@ -140,6 +140,15 @@ definitions:
     - code
     - phoneNumber
     type: object
+  v1.StrategyIndexRequest:
+    properties:
+      strategyIndexId:
+        type: integer
+      userId:
+        type: integer
+    required:
+    - strategyIndexId
+    type: object
   v1.StrategyRequest:
     properties:
       strategyId:
@@ -247,6 +256,58 @@ paths:
       security:
       - Bearer: []
       summary: 创建策略
+      tags:
+      - 策略
+  /strategy/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.StrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 删除策略
+      tags:
+      - 策略
+  /strategy/index/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.StrategyIndexRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 删除策略关联指标
       tags:
       - 策略
   /strategy/index/list:

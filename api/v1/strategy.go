@@ -5,6 +5,11 @@ type StrategyRequest struct {
 	StrategyId int64 `json:"strategyId" binding:"required"`
 }
 
+type StrategyIndexRequest struct {
+	UserId          int64 `json:"userId"`
+	StrategyIndexId int64 `json:"strategyIndexId" binding:"required"`
+}
+
 type CreateStrategyRequest struct {
 	UserId            int64          `json:"userId"`
 	Name              string         `json:"name" binding:"required"`

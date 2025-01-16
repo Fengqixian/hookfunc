@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"gorm.io/gorm"
+	v1 "hookfunc/api/v1"
 	"hookfunc/internal/model"
 )
 
@@ -13,6 +14,8 @@ type StrategyRepository interface {
 	CreateStrategy(ctx context.Context, strategy *model.Strategy) error
 	CreateStrategyIndex(ctx context.Context, strategyIndex *[]model.StrategyIndex) error
 	ListStrategyIndexByStrategyId(ctx context.Context, strategyId int64, userId int64) (*[]model.StrategyIndex, error)
+	DeleteStrategyIndex(ctx context.Context, req v1.StrategyIndexRequest) error
+	DeleteStrategy(ctx context.Context, req v1.StrategyRequest) error
 }
 
 func NewStrategyRepository(repository *Repository) StrategyRepository {
@@ -23,6 +26,22 @@ func NewStrategyRepository(repository *Repository) StrategyRepository {
 
 type strategyRepository struct {
 	*Repository
+}
+
+func (r *strategyRepository) DeleteStrategy(ctx context.Context, req v1.StrategyRequest) error {
+	if err := r.DB(ctx).Model(&model.Strategy{}).Where("id = ? and user_id = ? and deleted = 0", req.StrategyId, req.UserId).Update("deleted", 1).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *strategyRepository) DeleteStrategyIndex(ctx context.Context, req v1.StrategyIndexRequest) error {
+	if err := r.DB(ctx).Model(&model.StrategyIndex{}).Where("id = ? and user_id = ? and deleted = 0", req.StrategyIndexId, req.UserId).Update("deleted", 1).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *strategyRepository) ListStrategyIndexByStrategyId(ctx context.Context, strategyId int64, userId int64) (*[]model.StrategyIndex, error) {

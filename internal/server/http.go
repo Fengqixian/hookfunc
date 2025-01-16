@@ -76,6 +76,8 @@ func NewHTTPServer(
 		{
 			strategyRouter.GET("/list", strategyHandler.ListStrategy)
 			strategyRouter.POST("/index/list", strategyHandler.ListStrategyIndex)
+			strategyRouter.POST("/index/delete", strategyHandler.DeleteStrategyIndex)
+			strategyRouter.POST("/delete", strategyHandler.DeleteStrategy)
 			strategyRouter.POST("/create", strategyHandler.CreateStrategy)
 
 		}

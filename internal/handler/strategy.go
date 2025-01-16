@@ -103,3 +103,65 @@ func (h *StrategyHandler) ListStrategyIndex(ctx *gin.Context) {
 
 	v1.HandleSuccess(ctx, strategies)
 }
+
+// DeleteStrategyIndex godoc
+//
+//	@Summary	删除策略关联指标
+//	@Schemes
+//	@Description
+//	@Tags		策略
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		Authorization	header	string				true	"Authorization token"
+//	@Param		request			body	v1.StrategyIndexRequest	true	"params"
+//	@Success	200
+//	@Router		/strategy/index/delete [post]
+func (h *StrategyHandler) DeleteStrategyIndex(ctx *gin.Context) {
+	var req v1.StrategyIndexRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrRequestParamsFail, err)
+		return
+	}
+
+	userId := GetUserIdFromCtx(ctx)
+	req.UserId = userId
+	err := h.strategyService.DeleteStrategyIndex(ctx, req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusInternalServerError, v1.ErrServer, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, nil)
+}
+
+// DeleteStrategy godoc
+//
+//	@Summary	删除策略
+//	@Schemes
+//	@Description
+//	@Tags		策略
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		Authorization	header	string				true	"Authorization token"
+//	@Param		request			body	v1.StrategyRequest	true	"params"
+//	@Success	200
+//	@Router		/strategy/delete [post]
+func (h *StrategyHandler) DeleteStrategy(ctx *gin.Context) {
+	var req v1.StrategyRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrRequestParamsFail, err)
+		return
+	}
+
+	userId := GetUserIdFromCtx(ctx)
+	req.UserId = userId
+	err := h.strategyService.DeleteStrategy(ctx, req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusInternalServerError, v1.ErrServer, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, nil)
+}
