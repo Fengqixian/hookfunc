@@ -37,18 +37,16 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	userHandler := handler.NewUserHandler(handlerHandler, userInfoService)
 	wechatService := service.NewWechatService(serviceService, repositoryRepository, userInfoService)
 	wechatHandler := handler.NewWechatHandler(handlerHandler, wechatService)
-	goodsRepository := repository.NewGoodsRepository(repositoryRepository)
-	goodsService := service.NewGoodsService(serviceService, goodsRepository)
-	goodsHandler := handler.NewGoodsHandler(handlerHandler, goodsService)
-	userAddressRepository := repository.NewUserAddressRepository(repositoryRepository)
-	userAddressService := service.NewUserAddressService(serviceService, userAddressRepository)
-	userAddressHandler := handler.NewUserAddressHandler(handlerHandler, userAddressService)
-	orderInfoRepository := repository.NewOrderInfoRepository(repositoryRepository)
-	orderGoodsRepository := repository.NewOrderGoodsRepository(repositoryRepository)
-	orderGoodsService := service.NewOrderGoodsService(serviceService, orderGoodsRepository, goodsService)
-	orderInfoService := service.NewOrderInfoService(serviceService, orderInfoRepository, orderGoodsService, goodsService, userAddressRepository)
-	orderInfoHandler := handler.NewOrderInfoHandler(handlerHandler, orderInfoService)
-	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, goodsHandler, userAddressHandler, orderInfoHandler)
+	strategyRepository := repository.NewStrategyRepository(repositoryRepository)
+	strategyService := service.NewStrategyService(serviceService, strategyRepository)
+	strategyHandler := handler.NewStrategyHandler(handlerHandler, strategyService)
+	barRepository := repository.NewBarRepository(repositoryRepository)
+	barService := service.NewBarService(serviceService, barRepository)
+	barHandler := handler.NewBarHandler(handlerHandler, barService)
+	indexRepository := repository.NewIndexRepository(repositoryRepository)
+	indexService := service.NewIndexService(serviceService, indexRepository)
+	indexHandler := handler.NewIndexHandler(handlerHandler, indexService)
+	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, strategyHandler, barHandler, indexHandler)
 	job := server.NewJob(logger)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {
@@ -57,11 +55,11 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 // wire.go:
 
-var repositorySet = wire.NewSet(repository.NewWechatMiniProgram, repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewResourceRepository, repository.NewUserInfoRepository, repository.NewGoodsRepository, repository.NewUserAddressRepository, repository.NewOrderInfoRepository, repository.NewOrderGoodsRepository)
+var repositorySet = wire.NewSet(repository.NewWechatMiniProgram, repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewResourceRepository, repository.NewUserInfoRepository, repository.NewGoodsRepository, repository.NewUserAddressRepository, repository.NewOrderInfoRepository, repository.NewOrderGoodsRepository, repository.NewStrategyRepository, repository.NewBarRepository, repository.NewIndexRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewResourceService, service.NewUserInfoService, service.NewWechatService, service.NewGoodsService, service.NewUserAddressService, service.NewOrderInfoService, service.NewOrderGoodsService)
+var serviceSet = wire.NewSet(service.NewService, service.NewResourceService, service.NewUserInfoService, service.NewWechatService, service.NewGoodsService, service.NewUserAddressService, service.NewOrderInfoService, service.NewOrderGoodsService, service.NewStrategyService, service.NewBarService, service.NewIndexService)
 
-var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewResourceHandler, handler.NewWechatHandler, handler.NewGoodsHandler, handler.NewUserAddressHandler, handler.NewOrderInfoHandler, handler.NewOrderGoodsHandler)
+var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewWechatHandler, handler.NewStrategyHandler, handler.NewBarHandler, handler.NewIndexHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob, server.NewTask)
 

@@ -20,9 +20,9 @@ func NewHTTPServer(
 	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
 	wechatHandler *handler.WechatHandler,
-	goodsHandler *handler.GoodsHandler,
-	userAddressHandler *handler.UserAddressHandler,
-	orderInfoHandler *handler.OrderInfoHandler,
+	strategyHandler *handler.StrategyHandler,
+	barHandler *handler.BarHandler,
+	indexHandler *handler.IndexHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(
@@ -61,13 +61,6 @@ func NewHTTPServer(
 			noAuthRouter.POST("/wechat/program/login", wechatHandler.ProgramLogin)
 			noAuthRouter.POST("/sms/code", userHandler.SendSmsCode)
 			noAuthRouter.POST("/verification/sms/code", userHandler.VerificationSmsCode)
-		}
-		// Non-strict permission routing group
-		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger), middleware.UserRole(logger))
-		{
-
-			noStrictAuthRouter.POST("/goods/info", goodsHandler.Info)
-			noStrictAuthRouter.GET("/goods/list", goodsHandler.List)
 
 		}
 
@@ -77,6 +70,22 @@ func NewHTTPServer(
 			strictAuthRouter.GET("/user", userHandler.GetProfile)
 
 		}
+
+		// Strict permission routing group
+		strategyRouter := v1.Group("/strategy").Use(middleware.StrictAuth(jwt, logger))
+		{
+			strategyRouter.GET("/list", strategyHandler.ListStrategy)
+
+		}
+
+		// Strict permission routing group
+		indexRouter := v1.Group("/index")
+		{
+			noAuthRouter.GET("/bar/list", barHandler.ListBar)
+			indexRouter.GET("/list", indexHandler.ListIndex)
+
+		}
+
 	}
 
 	return s

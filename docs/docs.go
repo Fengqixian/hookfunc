@@ -24,41 +24,13 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/goods/info": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "商品"
-                ],
-                "summary": "通过商品ID获取商品信息",
-                "parameters": [
-                    {
-                        "description": "params",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.Goods"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/goods/list": {
+        "/index/bar/list": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -66,61 +38,26 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "商品"
+                    "指标"
                 ],
-                "summary": "获取所有商品信息",
+                "summary": "时间线",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v1.Response"
+                            "$ref": "#/definitions/model.Bar"
                         }
                     }
                 }
             }
         },
-        "/order/cancel": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "订单"
-                ],
-                "summary": "取消订单",
-                "parameters": [
-                    {
-                        "description": "params",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.CancelOrderRequest"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/order/list": {
+        "/index/list": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -128,54 +65,14 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "订单"
+                    "指标"
                 ],
-                "summary": "历史订单",
+                "summary": "指标列表",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v1.OrderInfoResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/order/place": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "订单"
-                ],
-                "summary": "下单",
-                "parameters": [
-                    {
-                        "description": "params",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.PlaceOrderRequest"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.Response"
+                            "$ref": "#/definitions/model.Index"
                         }
                     }
                 }
@@ -216,6 +113,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/strategy/list": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "策略"
+                ],
+                "summary": "获取当前用户的策略列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Strategy"
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "security": [
@@ -247,101 +180,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/v1.GetProfileResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address/create": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户模块"
-                ],
-                "summary": "保存收货地址信息",
-                "parameters": [
-                    {
-                        "description": "params",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.UserAddressInfoRequest"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address/list": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户模块"
-                ],
-                "summary": "收货地址列表",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.UserAddressInfo"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address/update": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户模块"
-                ],
-                "summary": "更新收货地址信息",
-                "parameters": [
-                    {
-                        "description": "params",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.UserAddressInfoRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.Response"
                         }
                     }
                 }
@@ -439,111 +277,101 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.OrderGoods": {
+        "model.Bar": {
             "type": "object",
             "properties": {
-                "amount": {
-                    "description": "商品数量",
-                    "type": "integer"
-                },
-                "createTime": {
+                "create_time": {
                     "description": "创建时间",
                     "type": "string"
                 },
                 "deleted": {
                     "description": "是否删除",
-                    "type": "integer"
-                },
-                "goodsId": {
-                    "description": "商品ID",
-                    "type": "integer"
+                    "type": "boolean"
                 },
                 "id": {
                     "description": "主键ID",
                     "type": "integer"
                 },
-                "orderId": {
-                    "description": "订单ID",
-                    "type": "integer"
-                },
-                "price": {
-                    "description": "商品单价",
-                    "type": "integer"
-                },
-                "updateTime": {
+                "update_time": {
                     "description": "更新时间",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "bar value",
                     "type": "string"
                 }
             }
         },
-        "model.UserAddressInfo": {
+        "model.Index": {
             "type": "object",
             "properties": {
-                "addressDetail": {
-                    "description": "详细地址",
-                    "type": "string"
-                },
-                "city": {
-                    "description": "市",
-                    "type": "string"
-                },
-                "createTime": {
+                "create_time": {
                     "description": "创建时间",
                     "type": "string"
                 },
-                "defaultState": {
-                    "description": "是否默认地址",
-                    "type": "integer"
+                "default_config": {
+                    "description": "指标简介",
+                    "type": "string"
                 },
                 "deleted": {
                     "description": "是否删除",
-                    "type": "integer"
+                    "type": "boolean"
+                },
+                "desc": {
+                    "description": "指标简介",
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "指标图标",
+                    "type": "string"
                 },
                 "id": {
                     "description": "主键ID",
                     "type": "integer"
                 },
-                "latitude": {
-                    "description": "纬度",
-                    "type": "integer"
-                },
-                "longitude": {
-                    "description": "经度",
-                    "type": "integer"
-                },
-                "phoneNumber": {
-                    "description": "收获人电话",
+                "name": {
+                    "description": "指标名称",
                     "type": "string"
                 },
-                "province": {
-                    "description": "省",
-                    "type": "string"
-                },
-                "region": {
-                    "description": "区",
-                    "type": "string"
-                },
-                "updateTime": {
+                "update_time": {
                     "description": "更新时间",
                     "type": "string"
                 },
-                "userId": {
+                "warning_config": {
+                    "description": "预警配置",
+                    "type": "string"
+                }
+            }
+        },
+        "model.Strategy": {
+            "type": "object",
+            "properties": {
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted": {
+                    "description": "是否删除",
+                    "type": "boolean"
+                },
+                "id": {
+                    "description": "主键ID",
+                    "type": "integer"
+                },
+                "strategy_name": {
+                    "description": "策略名称",
+                    "type": "string"
+                },
+                "subscription_state": {
+                    "description": "订阅状态: 0 未订阅 1 已订阅",
+                    "type": "integer"
+                },
+                "update_time": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "user_id": {
                     "description": "用户ID",
-                    "type": "integer"
-                },
-                "userName": {
-                    "description": "收获人姓名",
-                    "type": "string"
-                }
-            }
-        },
-        "v1.CancelOrderRequest": {
-            "type": "object",
-            "required": [
-                "orderId"
-            ],
-            "properties": {
-                "orderId": {
                     "type": "integer"
                 }
             }
@@ -574,139 +402,6 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.Goods": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "v1.OrderGoods": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "description": "商品数量",
-                    "type": "integer"
-                },
-                "goodsId": {
-                    "description": "商品ID",
-                    "type": "integer"
-                },
-                "goodsName": {
-                    "description": "商品名称",
-                    "type": "string"
-                },
-                "price": {
-                    "description": "单价",
-                    "type": "integer"
-                },
-                "total": {
-                    "description": "商品金额",
-                    "type": "integer"
-                }
-            }
-        },
-        "v1.OrderInfoResponse": {
-            "type": "object",
-            "properties": {
-                "addressDetail": {
-                    "description": "详细地址",
-                    "type": "string"
-                },
-                "city": {
-                    "description": "市",
-                    "type": "string"
-                },
-                "goods": {
-                    "description": "商品列表",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/v1.OrderGoods"
-                    }
-                },
-                "latitude": {
-                    "description": "纬度",
-                    "type": "integer"
-                },
-                "longitude": {
-                    "description": "经度",
-                    "type": "integer"
-                },
-                "orderId": {
-                    "description": "订单ID",
-                    "type": "integer"
-                },
-                "orderState": {
-                    "description": "订单状态",
-                    "type": "integer"
-                },
-                "paymentModel": {
-                    "description": "支付方式",
-                    "type": "integer"
-                },
-                "phoneNumber": {
-                    "description": "收获人电话",
-                    "type": "string"
-                },
-                "placeTime": {
-                    "description": "下单时间",
-                    "type": "string"
-                },
-                "province": {
-                    "description": "省",
-                    "type": "string"
-                },
-                "region": {
-                    "description": "区",
-                    "type": "string"
-                },
-                "remark": {
-                    "description": "订单备注",
-                    "type": "string"
-                },
-                "total": {
-                    "description": "订单金额",
-                    "type": "integer"
-                },
-                "userId": {
-                    "description": "用户ID",
-                    "type": "integer"
-                },
-                "userName": {
-                    "description": "收获人姓名",
-                    "type": "string"
-                }
-            }
-        },
-        "v1.PlaceOrderRequest": {
-            "type": "object",
-            "required": [
-                "addressId",
-                "deliveryTime",
-                "orderGoods"
-            ],
-            "properties": {
-                "addressId": {
-                    "type": "integer"
-                },
-                "deliveryTime": {
-                    "type": "string"
-                },
-                "orderGoods": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.OrderGoods"
-                    }
-                },
-                "remark": {
-                    "type": "string"
-                },
-                "userId": {
-                    "type": "integer"
-                }
-            }
-        },
         "v1.Response": {
             "type": "object",
             "properties": {
@@ -733,56 +428,6 @@ const docTemplate = `{
                 "phoneNumber": {
                     "type": "string",
                     "example": "1234567890"
-                }
-            }
-        },
-        "v1.UserAddressInfoRequest": {
-            "type": "object",
-            "required": [
-                "addressDetail",
-                "city",
-                "latitude",
-                "longitude",
-                "phoneNumber",
-                "province",
-                "region",
-                "userName"
-            ],
-            "properties": {
-                "addressDetail": {
-                    "description": "详细地址",
-                    "type": "string"
-                },
-                "city": {
-                    "description": "市",
-                    "type": "string"
-                },
-                "latitude": {
-                    "description": "纬度",
-                    "type": "integer"
-                },
-                "longitude": {
-                    "description": "经度",
-                    "type": "integer"
-                },
-                "phoneNumber": {
-                    "description": "收获人电话",
-                    "type": "string"
-                },
-                "province": {
-                    "description": "省",
-                    "type": "string"
-                },
-                "region": {
-                    "description": "区",
-                    "type": "string"
-                },
-                "userId": {
-                    "type": "integer"
-                },
-                "userName": {
-                    "description": "收获人姓名",
-                    "type": "string"
                 }
             }
         },
