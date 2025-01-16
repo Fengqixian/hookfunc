@@ -317,6 +317,48 @@ const docTemplate = `{
                 }
             }
         },
+        "/strategy/subscription": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "策略"
+                ],
+                "summary": "更新策略订阅状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.StrategyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "security": [
@@ -448,7 +490,7 @@ const docTemplate = `{
         "model.Bar": {
             "type": "object",
             "properties": {
-                "create_time": {
+                "createTime": {
                     "description": "创建时间",
                     "type": "string"
                 },
@@ -460,7 +502,7 @@ const docTemplate = `{
                     "description": "主键ID",
                     "type": "integer"
                 },
-                "update_time": {
+                "updateTime": {
                     "description": "更新时间",
                     "type": "string"
                 },
@@ -473,11 +515,11 @@ const docTemplate = `{
         "model.Index": {
             "type": "object",
             "properties": {
-                "create_time": {
+                "createTime": {
                     "description": "创建时间",
                     "type": "string"
                 },
-                "default_config": {
+                "defaultConfig": {
                     "description": "指标简介",
                     "type": "string"
                 },
@@ -501,11 +543,11 @@ const docTemplate = `{
                     "description": "指标名称",
                     "type": "string"
                 },
-                "update_time": {
+                "updateTime": {
                     "description": "更新时间",
                     "type": "string"
                 },
-                "warning_config": {
+                "warningConfig": {
                     "description": "预警配置",
                     "type": "string"
                 }
@@ -514,7 +556,7 @@ const docTemplate = `{
         "model.Strategy": {
             "type": "object",
             "properties": {
-                "create_time": {
+                "createTime": {
                     "description": "创建时间",
                     "type": "string"
                 },
@@ -526,19 +568,19 @@ const docTemplate = `{
                     "description": "主键ID",
                     "type": "integer"
                 },
-                "strategy_name": {
+                "strategyName": {
                     "description": "策略名称",
                     "type": "string"
                 },
-                "subscription_state": {
+                "subscriptionState": {
                     "description": "订阅状态: 0 未订阅 1 已订阅",
                     "type": "integer"
                 },
-                "update_time": {
+                "updateTime": {
                     "description": "更新时间",
                     "type": "string"
                 },
-                "user_id": {
+                "userId": {
                     "description": "用户ID",
                     "type": "integer"
                 }

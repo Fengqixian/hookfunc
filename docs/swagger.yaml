@@ -1,7 +1,7 @@
 definitions:
   model.Bar:
     properties:
-      create_time:
+      createTime:
         description: 创建时间
         type: string
       deleted:
@@ -10,7 +10,7 @@ definitions:
       id:
         description: 主键ID
         type: integer
-      update_time:
+      updateTime:
         description: 更新时间
         type: string
       value:
@@ -19,10 +19,10 @@ definitions:
     type: object
   model.Index:
     properties:
-      create_time:
+      createTime:
         description: 创建时间
         type: string
-      default_config:
+      defaultConfig:
         description: 指标简介
         type: string
       deleted:
@@ -40,16 +40,16 @@ definitions:
       name:
         description: 指标名称
         type: string
-      update_time:
+      updateTime:
         description: 更新时间
         type: string
-      warning_config:
+      warningConfig:
         description: 预警配置
         type: string
     type: object
   model.Strategy:
     properties:
-      create_time:
+      createTime:
         description: 创建时间
         type: string
       deleted:
@@ -58,16 +58,16 @@ definitions:
       id:
         description: 主键ID
         type: integer
-      strategy_name:
+      strategyName:
         description: 策略名称
         type: string
-      subscription_state:
+      subscriptionState:
         description: '订阅状态: 0 未订阅 1 已订阅'
         type: integer
-      update_time:
+      updateTime:
         description: 更新时间
         type: string
-      user_id:
+      userId:
         description: 用户ID
         type: integer
     type: object
@@ -356,6 +356,32 @@ paths:
       security:
       - Bearer: []
       summary: 获取当前用户的策略列表
+      tags:
+      - 策略
+  /strategy/subscription:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.StrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 更新策略订阅状态
       tags:
       - 策略
   /user:

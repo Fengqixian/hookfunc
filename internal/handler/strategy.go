@@ -165,3 +165,34 @@ func (h *StrategyHandler) DeleteStrategy(ctx *gin.Context) {
 
 	v1.HandleSuccess(ctx, nil)
 }
+
+// UpdateStrategySubscriptionState godoc
+//
+//	@Summary	更新策略订阅状态
+//	@Schemes
+//	@Description
+//	@Tags		策略
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		Authorization	header	string				true	"Authorization token"
+//	@Param		request			body	v1.StrategyRequest	true	"params"
+//	@Success	200
+//	@Router		/strategy/subscription [post]
+func (h *StrategyHandler) UpdateStrategySubscriptionState(ctx *gin.Context) {
+	var req v1.StrategyRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrRequestParamsFail, err)
+		return
+	}
+
+	userId := GetUserIdFromCtx(ctx)
+	req.UserId = userId
+	err := h.strategyService.UpdateStrategySubscriptionState(ctx, req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusInternalServerError, v1.ErrServer, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, nil)
+}

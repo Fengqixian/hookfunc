@@ -13,6 +13,7 @@ type StrategyIndexRequest struct {
 type CreateStrategyRequest struct {
 	UserId            int64          `json:"userId"`
 	Name              string         `json:"name" binding:"required"`
+	InstId            string         `json:"InstId" binding:"required"`
 	SubscriptionState int32          `json:"subscriptionState"`
 	IndexList         []IndexRequest `json:"indexList" binding:"required"`
 }

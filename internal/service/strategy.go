@@ -15,6 +15,7 @@ type StrategyService interface {
 	CreateStrategy(ctx context.Context, req v1.CreateStrategyRequest) error
 	DeleteStrategyIndex(ctx context.Context, req v1.StrategyIndexRequest) error
 	DeleteStrategy(ctx context.Context, req v1.StrategyRequest) error
+	UpdateStrategySubscriptionState(ctx context.Context, req v1.StrategyRequest) error
 }
 
 func NewStrategyService(service *Service, strategyRepository repository.StrategyRepository) StrategyService {
@@ -27,6 +28,10 @@ func NewStrategyService(service *Service, strategyRepository repository.Strategy
 type strategyService struct {
 	*Service
 	strategyRepository repository.StrategyRepository
+}
+
+func (s *strategyService) UpdateStrategySubscriptionState(ctx context.Context, req v1.StrategyRequest) error {
+	return s.strategyRepository.UpdateStrategySubscriptionState(ctx, req)
 }
 
 func (s *strategyService) DeleteStrategy(ctx context.Context, req v1.StrategyRequest) error {
@@ -42,6 +47,7 @@ func (s *strategyService) CreateStrategy(ctx context.Context, req v1.CreateStrat
 		StrategyName:      req.Name,
 		SubscriptionState: req.SubscriptionState,
 		UserID:            req.UserId,
+		InstId:            req.InstId,
 	}
 
 	err := s.strategyRepository.CreateStrategy(ctx, &strategy)

@@ -79,7 +79,7 @@ func NewHTTPServer(
 			strategyRouter.POST("/index/delete", strategyHandler.DeleteStrategyIndex)
 			strategyRouter.POST("/delete", strategyHandler.DeleteStrategy)
 			strategyRouter.POST("/create", strategyHandler.CreateStrategy)
-
+			strategyRouter.POST("/subscription", strategyHandler.UpdateStrategySubscriptionState)
 		}
 
 		// Strict permission routing group

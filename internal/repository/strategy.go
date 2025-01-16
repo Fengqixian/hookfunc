@@ -16,6 +16,7 @@ type StrategyRepository interface {
 	ListStrategyIndexByStrategyId(ctx context.Context, strategyId int64, userId int64) (*[]model.StrategyIndex, error)
 	DeleteStrategyIndex(ctx context.Context, req v1.StrategyIndexRequest) error
 	DeleteStrategy(ctx context.Context, req v1.StrategyRequest) error
+	UpdateStrategySubscriptionState(ctx context.Context, req v1.StrategyRequest) error
 }
 
 func NewStrategyRepository(repository *Repository) StrategyRepository {
@@ -26,6 +27,15 @@ func NewStrategyRepository(repository *Repository) StrategyRepository {
 
 type strategyRepository struct {
 	*Repository
+}
+
+func (r *strategyRepository) UpdateStrategySubscriptionState(ctx context.Context, req v1.StrategyRequest) error {
+	sql := "UPDATE strategy SET subscription_state = IF(subscription_state = 0, 1, 0) WHERE id = ? AND user_id = ? AND deleted = 0"
+	if err := r.DB(ctx).Exec(sql, req.StrategyId, req.UserId).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *strategyRepository) DeleteStrategy(ctx context.Context, req v1.StrategyRequest) error {
