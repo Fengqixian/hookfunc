@@ -33,7 +33,7 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	sidSid := sid.NewSid()
 	serviceService := service.NewService(transaction, logger, sidSid, jwtJWT)
 	userInfoRepository := repository.NewUserInfoRepository(repositoryRepository)
-	userInfoService := service.NewUserInfoService(serviceService, userInfoRepository)
+	userInfoService := service.NewUserInfoService(serviceService, repositoryRepository, userInfoRepository)
 	userHandler := handler.NewUserHandler(handlerHandler, userInfoService)
 	wechatService := service.NewWechatService(serviceService, repositoryRepository, userInfoService)
 	wechatHandler := handler.NewWechatHandler(handlerHandler, wechatService)

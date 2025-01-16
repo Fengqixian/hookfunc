@@ -198,6 +198,18 @@ definitions:
       message:
         type: string
     type: object
+  v1.SendSMSCodeRequest:
+    properties:
+      code:
+        example: "123456"
+        type: string
+      phoneNumber:
+        example: "1234567890"
+        type: string
+    required:
+    - code
+    - phoneNumber
+    type: object
   v1.UserAddressInfoRequest:
     properties:
       addressDetail:
@@ -358,6 +370,27 @@ paths:
       summary: 下单
       tags:
       - 订单
+  /sms/code:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.SendSMSCodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 发送短信验证码
+      tags:
+      - 短信
   /user:
     get:
       consumes:
@@ -441,6 +474,27 @@ paths:
       summary: 更新收货地址信息
       tags:
       - 用户模块
+  /verification/sms/code:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.SendSMSCodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 核对验证码
+      tags:
+      - 短信
   /wechat/program/login:
     post:
       consumes:

@@ -59,6 +59,8 @@ func NewHTTPServer(
 		{
 			noAuthRouter.POST("/wechat/qr/login", wechatHandler.ProgramQrCodeLogin)
 			noAuthRouter.POST("/wechat/program/login", wechatHandler.ProgramLogin)
+			noAuthRouter.POST("/sms/code", userHandler.SendSmsCode)
+			noAuthRouter.POST("/verification/sms/code", userHandler.VerificationSmsCode)
 		}
 		// Non-strict permission routing group
 		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger), middleware.UserRole(logger))
@@ -67,19 +69,12 @@ func NewHTTPServer(
 			noStrictAuthRouter.POST("/goods/info", goodsHandler.Info)
 			noStrictAuthRouter.GET("/goods/list", goodsHandler.List)
 
-			noStrictAuthRouter.POST("/order/place", orderInfoHandler.Place)
-			noStrictAuthRouter.POST("/order/cancel", orderInfoHandler.Cancel)
-			noStrictAuthRouter.GET("/order/list", orderInfoHandler.List)
-
-			noStrictAuthRouter.GET("/user/address/list", userAddressHandler.List)
-			noStrictAuthRouter.POST("/user/address/update", userAddressHandler.Update)
 		}
 
 		// Strict permission routing group
 		strictAuthRouter := v1.Group("/").Use(middleware.StrictAuth(jwt, logger))
 		{
 			strictAuthRouter.GET("/user", userHandler.GetProfile)
-			strictAuthRouter.POST("/user/address/create", userAddressHandler.Create)
 
 		}
 	}

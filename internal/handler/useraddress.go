@@ -32,9 +32,9 @@ func NewUserAddressHandler(
 //	@Tags		用户模块
 //	@Accept		json
 //	@Produce	json
-//	@Param		request	body		v1.UserAddressInfoRequest	true	"params"
-//	@Param		Authorization	header		string	true	"Authorization token"
-//	@Success	200		{object}	v1.Response
+//	@Param		request			body		v1.UserAddressInfoRequest	true	"params"
+//	@Param		Authorization	header		string						true	"Authorization token"
+//	@Success	200				{object}	v1.Response
 //	@Router		/user/address/create [post]
 func (h *UserAddressHandler) Create(ctx *gin.Context) {
 	var req v1.UserAddressInfoRequest
@@ -90,7 +90,7 @@ func (h *UserAddressHandler) Update(ctx *gin.Context) {
 //	@Tags		用户模块
 //	@Accept		json
 //	@Produce	json
-//	@Success	200		{object}	model.UserAddressInfo
+//	@Success	200	{object}	model.UserAddressInfo
 //	@Router		/user/address/list [get]
 func (h *UserAddressHandler) List(ctx *gin.Context) {
 	userAddress, err := h.userAddressService.ListUserAddresses(ctx, GetUserIdFromCtx(ctx))

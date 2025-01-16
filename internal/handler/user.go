@@ -47,3 +47,59 @@ func (h *UserHandler) GetProfile(ctx *gin.Context) {
 
 	v1.HandleSuccess(ctx, user)
 }
+
+// SendSmsCode godoc
+//
+//	@Summary	发送短信验证码
+//	@Schemes
+//	@Description
+//	@Tags		短信
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		request	body	v1.SendSMSCodeRequest	true	"params"
+//	@Success	200
+//	@Router		/sms/code [post]
+func (h *UserHandler) SendSmsCode(ctx *gin.Context) {
+	var req v1.SendSMSCodeRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		return
+	}
+
+	err := h.userInfoService.SendNoteVerificationCode(ctx, req.PhoneNumber)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, nil)
+}
+
+// VerificationSmsCode godoc
+//
+//	@Summary	核对验证码
+//	@Schemes
+//	@Description
+//	@Tags		短信
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		request	body	v1.SendSMSCodeRequest	true	"params"
+//	@Success	200
+//	@Router		/verification/sms/code [post]
+func (h *UserHandler) VerificationSmsCode(ctx *gin.Context) {
+	var req v1.SendSMSCodeRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		return
+	}
+
+	token, err := h.userInfoService.VerificationCode(ctx, req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, token)
+}

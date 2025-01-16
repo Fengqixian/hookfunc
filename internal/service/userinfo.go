@@ -3,28 +3,72 @@ package service
 import (
 	"context"
 	"fmt"
+	v1 "hookfunc/api/v1"
 	"hookfunc/internal/model"
 	"hookfunc/internal/repository"
+	"hookfunc/pkg/helper/uuid"
 	"math/rand"
 	"time"
+)
+
+var (
+	VerificationsCodeRedisKey = "sms:verifications:code:%s"
 )
 
 type UserInfoService interface {
 	GetUserInfo(ctx context.Context, openid string) (*model.UserInfo, error)
 	GetUserInfoById(ctx context.Context, userId int64) (*model.UserInfo, error)
 	CreateUserInfo(ctx context.Context, userInfo *model.UserInfo) error
+	SendNoteVerificationCode(ctx context.Context, phone string) error
+	VerificationCode(ctx context.Context, params v1.SendSMSCodeRequest) (string, error)
 }
 
-func NewUserInfoService(service *Service, userInfoRepository repository.UserInfoRepository) UserInfoService {
+func NewUserInfoService(service *Service, repository *repository.Repository, userInfoRepository repository.UserInfoRepository) UserInfoService {
 	return &userInfoService{
 		Service:            service,
 		userInfoRepository: userInfoRepository,
+		Repository:         repository,
 	}
 }
 
 type userInfoService struct {
 	*Service
 	userInfoRepository repository.UserInfoRepository
+	*repository.Repository
+}
+
+func (s *userInfoService) VerificationCode(ctx context.Context, params v1.SendSMSCodeRequest) (string, error) {
+	code := s.Repository.GetRedisClient().Get(ctx, fmt.Sprintf(VerificationsCodeRedisKey, params.PhoneNumber))
+	if code == nil {
+		return "", fmt.Errorf("验证码已过期")
+	}
+
+	if code.Val() != params.Code {
+		return "", fmt.Errorf("验证码错误")
+	}
+
+	info, err := s.GetUserInfo(ctx, params.PhoneNumber)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := s.jwt.GenToken(info.ID, time.Now().Add(time.Hour*24*30))
+	if err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+func (s *userInfoService) SendNoteVerificationCode(ctx context.Context, phone string) error {
+	codeKey := fmt.Sprintf(VerificationsCodeRedisKey, phone)
+	cacheCode := s.Repository.GetRedisClient().Get(ctx, codeKey)
+	if cacheCode.Val() != "" {
+		return fmt.Errorf("验证码已发送")
+	}
+
+	code := uuid.GenerateSMSCode()
+	s.Repository.GetRedisClient().Set(ctx, codeKey, code, 120*time.Second)
+	return nil
 }
 
 var vegetables = []string{
@@ -81,9 +125,10 @@ func (s *userInfoService) GetUserInfo(ctx context.Context, openid string) (*mode
 	}
 
 	newUser := &model.UserInfo{
-		Openid:   openid,
-		NickName: generateNickname(),
-		Avatar:   "https://cdn.learnku.com/uploads/images/201805/11/1/ZnrA2VK0SN.png!/both/200x200",
+		Openid:      openid,
+		NickName:    generateNickname(),
+		Avatar:      "https://cdn.learnku.com/uploads/images/201805/11/1/ZnrA2VK0SN.png!/both/200x200",
+		PhoneNumber: openid,
 	}
 
 	err = s.CreateUserInfo(ctx, newUser)

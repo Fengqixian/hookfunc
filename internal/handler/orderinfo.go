@@ -27,9 +27,9 @@ func NewOrderInfoHandler(handler *Handler, orderInfoService service.OrderInfoSer
 //	@Tags		订单
 //	@Accept		json
 //	@Produce	json
-//	@Param		request	body		v1.PlaceOrderRequest	true	"params"
-//	@Param		Authorization	header		string	true	"Authorization token"
-//	@Success	200		{object}	v1.Response
+//	@Param		request			body		v1.PlaceOrderRequest	true	"params"
+//	@Param		Authorization	header		string					true	"Authorization token"
+//	@Success	200				{object}	v1.Response
 //	@Router		/order/place [POST]
 func (h *OrderInfoHandler) Place(ctx *gin.Context) {
 	var req v1.PlaceOrderRequest
@@ -56,9 +56,9 @@ func (h *OrderInfoHandler) Place(ctx *gin.Context) {
 //	@Tags		订单
 //	@Accept		json
 //	@Produce	json
-//	@Param		request	body		v1.CancelOrderRequest	true	"params"
-//	@Param		Authorization	header		string	true	"Authorization token"
-//	@Success	200		{object}	v1.Response
+//	@Param		request			body		v1.CancelOrderRequest	true	"params"
+//	@Param		Authorization	header		string					true	"Authorization token"
+//	@Success	200				{object}	v1.Response
 //	@Router		/order/cancel [POST]
 func (h *OrderInfoHandler) Cancel(ctx *gin.Context) {
 	var req v1.CancelOrderRequest
@@ -90,7 +90,7 @@ func (h *OrderInfoHandler) Cancel(ctx *gin.Context) {
 //	@Tags		订单
 //	@Accept		json
 //	@Produce	json
-//	@Success	200		{object}	v1.OrderInfoResponse
+//	@Success	200	{object}	v1.OrderInfoResponse
 //	@Router		/order/list [GET]
 func (h *OrderInfoHandler) List(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)

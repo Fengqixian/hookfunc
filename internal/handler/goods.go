@@ -59,7 +59,7 @@ func (h *GoodsHandler) Info(ctx *gin.Context) {
 //	@Tags		商品
 //	@Accept		json
 //	@Produce	json
-//	@Success	200		{object}	v1.Response
+//	@Success	200	{object}	v1.Response
 //	@Router		/goods/list [GET]
 func (h *GoodsHandler) List(ctx *gin.Context) {
 	response, err := h.goodsService.GetAllGoods(ctx)
