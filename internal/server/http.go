@@ -61,7 +61,7 @@ func NewHTTPServer(
 			noAuthRouter.POST("/wechat/program/login", wechatHandler.ProgramLogin)
 			noAuthRouter.POST("/sms/code", userHandler.SendSmsCode)
 			noAuthRouter.POST("/verification/sms/code", userHandler.VerificationSmsCode)
-
+			noAuthRouter.GET("/coin/list", barHandler.ListCoin)
 		}
 
 		// Strict permission routing group
@@ -85,8 +85,9 @@ func NewHTTPServer(
 		// Strict permission routing group
 		indexRouter := v1.Group("/index")
 		{
-			noAuthRouter.GET("/bar/list", barHandler.ListBar)
+			indexRouter.GET("/bar/list", barHandler.ListBar)
 			indexRouter.GET("/list", indexHandler.ListIndex)
+			indexRouter.POST("/test", indexHandler.IndexTest)
 
 		}
 

@@ -9,6 +9,7 @@ import (
 
 type BarRepository interface {
 	ListBar(ctx context.Context) (*[]model.Bar, error)
+	ListCoin(ctx context.Context) (*[]model.Coin, error)
 }
 
 func NewBarRepository(repository *Repository) BarRepository {
@@ -19,6 +20,18 @@ func NewBarRepository(repository *Repository) BarRepository {
 
 type barRepository struct {
 	*Repository
+}
+
+func (b barRepository) ListCoin(ctx context.Context) (*[]model.Coin, error) {
+	var coins []model.Coin
+	if err := b.DB(ctx).Where("deleted = 0 order by id asc").Find(&coins).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return &coins, nil
+		}
+		return nil, err
+	}
+
+	return &coins, nil
 }
 
 func (b barRepository) ListBar(ctx context.Context) (*[]model.Bar, error) {

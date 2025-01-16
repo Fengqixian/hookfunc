@@ -39,3 +39,31 @@ func (h *IndexHandler) ListIndex(ctx *gin.Context) {
 
 	v1.HandleSuccess(ctx, index)
 }
+
+// IndexTest godoc
+//
+//	@Summary	指标回测
+//	@Schemes
+//	@Description
+//	@Tags		指标
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		request			body	v1.IndexRequest	true	"params"
+//	@Success	200	{object}	model.Index
+//	@Router		/index/test [post]
+func (h *IndexHandler) IndexTest(ctx *gin.Context) {
+	var req v1.IndexRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrRequestParamsFail, err)
+		return
+	}
+
+	result, err := h.indexService.IndexHitTarget(ctx, req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusInternalServerError, v1.ErrServer, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, result)
+}

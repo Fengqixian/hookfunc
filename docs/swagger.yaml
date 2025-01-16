@@ -58,6 +58,9 @@ definitions:
       id:
         description: 主键ID
         type: integer
+      instId:
+        description: 币种ID
+        type: string
       strategyName:
         description: 策略名称
         type: string
@@ -73,6 +76,8 @@ definitions:
     type: object
   v1.CreateStrategyRequest:
     properties:
+      InstId:
+        type: string
       indexList:
         items:
           $ref: '#/definitions/v1.IndexRequest'
@@ -84,6 +89,7 @@ definitions:
       userId:
         type: integer
     required:
+    - InstId
     - indexList
     - name
     type: object
@@ -106,6 +112,8 @@ definitions:
     type: object
   v1.IndexRequest:
     properties:
+      InstId:
+        type: string
       bar:
         type: string
       indexConfig:
@@ -115,6 +123,7 @@ definitions:
       warningIndex:
         type: integer
     required:
+    - InstId
     - bar
     - indexConfig
     - indexId
@@ -179,6 +188,22 @@ info:
   title: Nunu Example API
   version: 1.0.0
 paths:
+  /coin/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Bar'
+      security:
+      - Bearer: []
+      summary: 币币信息
+      tags:
+      - 公共
   /index/bar/list:
     get:
       consumes:
@@ -194,7 +219,7 @@ paths:
       - Bearer: []
       summary: 时间线
       tags:
-      - 指标
+      - 公共
   /index/list:
     get:
       consumes:
@@ -209,6 +234,29 @@ paths:
       security:
       - Bearer: []
       summary: 指标列表
+      tags:
+      - 指标
+  /index/test:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.IndexRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Index'
+      security:
+      - Bearer: []
+      summary: 指标回测
       tags:
       - 指标
   /sms/code:

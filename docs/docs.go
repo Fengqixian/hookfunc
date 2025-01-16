@@ -24,6 +24,33 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/coin/list": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "公共"
+                ],
+                "summary": "币币信息",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Bar"
+                        }
+                    }
+                }
+            }
+        },
         "/index/bar/list": {
             "get": {
                 "security": [
@@ -38,7 +65,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "指标"
+                    "公共"
                 ],
                 "summary": "时间线",
                 "responses": {
@@ -68,6 +95,44 @@ const docTemplate = `{
                     "指标"
                 ],
                 "summary": "指标列表",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Index"
+                        }
+                    }
+                }
+            }
+        },
+        "/index/test": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "指标"
+                ],
+                "summary": "指标回测",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.IndexRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -568,6 +633,10 @@ const docTemplate = `{
                     "description": "主键ID",
                     "type": "integer"
                 },
+                "instId": {
+                    "description": "币种ID",
+                    "type": "string"
+                },
                 "strategyName": {
                     "description": "策略名称",
                     "type": "string"
@@ -589,10 +658,14 @@ const docTemplate = `{
         "v1.CreateStrategyRequest": {
             "type": "object",
             "required": [
+                "InstId",
                 "indexList",
                 "name"
             ],
             "properties": {
+                "InstId": {
+                    "type": "string"
+                },
                 "indexList": {
                     "type": "array",
                     "items": {
@@ -639,12 +712,16 @@ const docTemplate = `{
         "v1.IndexRequest": {
             "type": "object",
             "required": [
+                "InstId",
                 "bar",
                 "indexConfig",
                 "indexId",
                 "warningIndex"
             ],
             "properties": {
+                "InstId": {
+                    "type": "string"
+                },
                 "bar": {
                     "type": "string"
                 },
