@@ -35,6 +35,7 @@ func (s *MACDStrategy) Execute(line []model.LineItem, params []int64, warningInd
 	if len(params) != 3 {
 		return nil, errors.New("MACD 策略执行失败: invalid params")
 	}
+
 	line = s.Kline.CalculateMACD(line, params[0], params[1], params[2])
 	switch warningIndex {
 	case 0: // 金叉
