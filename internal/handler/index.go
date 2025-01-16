@@ -28,7 +28,7 @@ func NewIndexHandler(handler *Handler, indexService service.IndexService) *Index
 //	@Accept		json
 //	@Produce	json
 //	@Security	Bearer
-//	@Success	200				{object}	model.Index
+//	@Success	200	{object}	model.Index
 //	@Router		/index/list [get]
 func (h *IndexHandler) ListIndex(ctx *gin.Context) {
 	index, err := h.indexService.ListIndex(ctx)

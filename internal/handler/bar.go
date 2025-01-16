@@ -28,7 +28,7 @@ func NewBarHandler(handler *Handler, barService service.BarService) *BarHandler 
 //	@Accept		json
 //	@Produce	json
 //	@Security	Bearer
-//	@Success	200				{object}	model.Bar
+//	@Success	200	{object}	model.Bar
 //	@Router		/index/bar/list [get]
 func (h *BarHandler) ListBar(ctx *gin.Context) {
 	bars, err := h.barService.ListBar(ctx)

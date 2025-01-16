@@ -113,6 +113,90 @@ const docTemplate = `{
                 }
             }
         },
+        "/strategy/create": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "策略"
+                ],
+                "summary": "创建策略",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.CreateStrategyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/strategy/index/list": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "策略"
+                ],
+                "summary": "获取策略关联指标",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.StrategyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/strategy/list": {
             "get": {
                 "security": [
@@ -376,6 +460,30 @@ const docTemplate = `{
                 }
             }
         },
+        "v1.CreateStrategyRequest": {
+            "type": "object",
+            "required": [
+                "indexList",
+                "name"
+            ],
+            "properties": {
+                "indexList": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v1.IndexRequest"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "subscriptionState": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
         "v1.GetProfileResponse": {
             "type": "object",
             "properties": {
@@ -399,6 +507,29 @@ const docTemplate = `{
                 },
                 "userId": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.IndexRequest": {
+            "type": "object",
+            "required": [
+                "bar",
+                "indexConfig",
+                "indexId",
+                "warningIndex"
+            ],
+            "properties": {
+                "bar": {
+                    "type": "string"
+                },
+                "indexConfig": {
+                    "type": "string"
+                },
+                "indexId": {
+                    "type": "integer"
+                },
+                "warningIndex": {
+                    "type": "integer"
                 }
             }
         },
@@ -428,6 +559,20 @@ const docTemplate = `{
                 "phoneNumber": {
                     "type": "string",
                     "example": "1234567890"
+                }
+            }
+        },
+        "v1.StrategyRequest": {
+            "type": "object",
+            "required": [
+                "strategyId"
+            ],
+            "properties": {
+                "strategyId": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
                 }
             }
         },

@@ -71,6 +71,22 @@ definitions:
         description: 用户ID
         type: integer
     type: object
+  v1.CreateStrategyRequest:
+    properties:
+      indexList:
+        items:
+          $ref: '#/definitions/v1.IndexRequest'
+        type: array
+      name:
+        type: string
+      subscriptionState:
+        type: integer
+      userId:
+        type: integer
+    required:
+    - indexList
+    - name
+    type: object
   v1.GetProfileResponse:
     properties:
       code:
@@ -87,6 +103,22 @@ definitions:
         type: string
       userId:
         type: string
+    type: object
+  v1.IndexRequest:
+    properties:
+      bar:
+        type: string
+      indexConfig:
+        type: string
+      indexId:
+        type: integer
+      warningIndex:
+        type: integer
+    required:
+    - bar
+    - indexConfig
+    - indexId
+    - warningIndex
     type: object
   v1.Response:
     properties:
@@ -107,6 +139,15 @@ definitions:
     required:
     - code
     - phoneNumber
+    type: object
+  v1.StrategyRequest:
+    properties:
+      strategyId:
+        type: integer
+      userId:
+        type: integer
+    required:
+    - strategyId
     type: object
   v1.WechatProgramLoginRequest:
     properties:
@@ -182,6 +223,58 @@ paths:
       summary: 发送短信验证码
       tags:
       - 短信
+  /strategy/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.CreateStrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 创建策略
+      tags:
+      - 策略
+  /strategy/index/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.StrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 获取策略关联指标
+      tags:
+      - 策略
   /strategy/list:
     get:
       consumes:

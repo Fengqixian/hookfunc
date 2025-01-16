@@ -75,6 +75,8 @@ func NewHTTPServer(
 		strategyRouter := v1.Group("/strategy").Use(middleware.StrictAuth(jwt, logger))
 		{
 			strategyRouter.GET("/list", strategyHandler.ListStrategy)
+			strategyRouter.POST("/index/list", strategyHandler.ListStrategyIndex)
+			strategyRouter.POST("/create", strategyHandler.CreateStrategy)
 
 		}
 

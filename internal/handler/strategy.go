@@ -41,3 +41,65 @@ func (h *StrategyHandler) ListStrategy(ctx *gin.Context) {
 
 	v1.HandleSuccess(ctx, strategies)
 }
+
+// CreateStrategy godoc
+//
+//	@Summary	创建策略
+//	@Schemes
+//	@Description
+//	@Tags		策略
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		Authorization	header	string						true	"Authorization token"
+//	@Param		request			body	v1.CreateStrategyRequest	true	"params"
+//	@Success	200
+//	@Router		/strategy/create [post]
+func (h *StrategyHandler) CreateStrategy(ctx *gin.Context) {
+	userId := GetUserIdFromCtx(ctx)
+	var req v1.CreateStrategyRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrRequestParamsFail, err)
+		return
+	}
+
+	req.UserId = userId
+	err := h.strategyService.CreateStrategy(ctx, req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusInternalServerError, v1.ErrServer, err)
+		return
+	}
+
+	v1.HandleSuccess(ctx, nil)
+}
+
+// ListStrategyIndex godoc
+//
+//	@Summary	获取策略关联指标
+//	@Schemes
+//	@Description
+//	@Tags		策略
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		Authorization	header	string				true	"Authorization token"
+//	@Param		request			body	v1.StrategyRequest	true	"params"
+//	@Success	200
+//	@Router		/strategy/index/list [post]
+func (h *StrategyHandler) ListStrategyIndex(ctx *gin.Context) {
+	var req v1.StrategyRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrRequestParamsFail, err)
+		return
+	}
+
+	userId := GetUserIdFromCtx(ctx)
+	req.UserId = userId
+	strategies, err := h.strategyService.ListStrategyIndex(ctx, req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusInternalServerError, v1.ErrServer, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, strategies)
+}
