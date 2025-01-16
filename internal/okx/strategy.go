@@ -32,7 +32,7 @@ type MACDStrategy struct {
 }
 
 func (s *MACDStrategy) Execute(line []model.LineItem, params []int64, warningIndex int32) (any, error) {
-	if len(params) != 3 {
+	if len(params) < 3 {
 		return nil, errors.New("MACD 策略执行失败: invalid params")
 	}
 
