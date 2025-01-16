@@ -62,13 +62,17 @@ func (i indexService) IndexHitTarget(ctx context.Context, req v1.IndexRequest) (
 		return nil, fmt.Errorf("指标配置错误：%s", req.IndexConfig)
 	}
 
-	result, err := i.s.Strategy[index.Name].Execute(line, array, req.WarningIndex)
+	strategy := i.s.Strategy[index.Name]
+	if strategy == nil {
+		return nil, fmt.Errorf("未开放的指标：%s", index.Name)
+	}
+
+	result, err := strategy.Execute(line, array, req.WarningIndex)
 	if err != nil {
 		i.logger.Error("【指标回测失败】", zap.Error(err))
 		return nil, err
 	}
 
-	fmt.Println(result)
 	return result, nil
 }
 

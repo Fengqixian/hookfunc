@@ -37,14 +37,14 @@ func (s *MACDStrategy) Execute(line []model.LineItem, params []int64, warningInd
 	}
 	line = s.Kline.CalculateMACD(line, params[0], params[1], params[2])
 	switch warningIndex {
-	case 0:
-		return "金叉", nil
-	case 1:
-		return "死叉", nil
-	case 2:
-		return "多头", nil
-	case 3:
-		return "空头", nil
+	case 0: // 金叉
+		return MACDCross(line, true), nil
+	case 1: // 死叉
+		return MACDCross(line, false), nil
+	case 2: // 多头
+		return MACDLongOrSort(line, true), nil
+	case 3: // 空头
+		return MACDLongOrSort(line, false), nil
 	default:
 		return nil, errors.New("未知的预警指标")
 	}
