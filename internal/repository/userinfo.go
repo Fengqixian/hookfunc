@@ -12,6 +12,7 @@ type UserInfoRepository interface {
 	FirstByOpenId(ctx context.Context, openid string) (*model.UserInfo, error)
 	FirstByUserId(ctx context.Context, userId int64) (*model.UserInfo, error)
 	InsertUserInfo(ctx context.Context, userInfo *model.UserInfo) error
+	UpdateSubscriptionEndTime(ctx context.Context, userInfo *model.UserInfo) error
 }
 
 func NewUserInfoRepository(repository *Repository) UserInfoRepository {
@@ -22,6 +23,14 @@ func NewUserInfoRepository(repository *Repository) UserInfoRepository {
 
 type userInfoRepository struct {
 	*Repository
+}
+
+func (r *userInfoRepository) UpdateSubscriptionEndTime(ctx context.Context, userInfo *model.UserInfo) error {
+	if err := r.DB(ctx).UpdateColumn("subscription_end", userInfo.SubscriptionEnd).Where("id = ?", userInfo.ID).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *userInfoRepository) FirstByUserId(ctx context.Context, userId int64) (*model.UserInfo, error) {

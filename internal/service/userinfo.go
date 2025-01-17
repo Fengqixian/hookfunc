@@ -71,13 +71,21 @@ func (s *userInfoService) ConfirmRechargeRecord(ctx context.Context, userId int6
 		if record.From == userInfo.Wallet && parseInt > s.Config.SubscriptionPrice[0] {
 			if parseInt >= s.Config.SubscriptionPrice[0] && parseInt < s.Config.SubscriptionPrice[1] {
 				// 开通一月
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 31)
 
 			} else if parseInt >= s.Config.SubscriptionPrice[1] && parseInt < s.Config.SubscriptionPrice[2] {
 				// 开通一季
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 93)
 
 			} else if parseInt >= s.Config.SubscriptionPrice[2] {
 				// 开通一年
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 365)
 
+			}
+
+			err := s.userInfoRepository.UpdateSubscriptionEndTime(ctx, userInfo)
+			if err != nil {
+				return false, err
 			}
 
 			return true, nil
@@ -85,6 +93,20 @@ func (s *userInfoService) ConfirmRechargeRecord(ctx context.Context, userId int6
 	}
 
 	return false, err
+}
+
+// GetNewDateTime 根据输入的datetime和天数返回新的datetime
+func GetNewDateTime(datetime time.Time, days int) time.Time {
+	// 检查datetime是否为零值
+	if datetime.IsZero() {
+		// 如果datetime为零值，使用当前系统时间
+		datetime = time.Now()
+	}
+
+	// 使用AddDate方法将时间加上指定的天数
+	newTime := datetime.AddDate(0, 0, days)
+
+	return newTime
 }
 
 func GetTimestampOneHourAgo() string {
