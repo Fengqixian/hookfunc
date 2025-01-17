@@ -432,6 +432,26 @@ paths:
       summary: 更新策略订阅状态
       tags:
       - 策略
+  /transaction/recharge/confirm:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 充值确认
+      tags:
+      - 交易
   /user:
     get:
       consumes:

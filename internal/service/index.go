@@ -17,8 +17,8 @@ type IndexService interface {
 	IndexHitTarget(ctx context.Context, req v1.IndexRequest) (any, error)
 }
 
-func NewIndexService(service *Service, indexRepository repository.IndexRepository) IndexService {
-	kline := okx.NewLine("https://www.okx.com", 10)
+func NewIndexService(okxConfig *okx.Config, service *Service, indexRepository repository.IndexRepository) IndexService {
+	kline := okx.NewLine(okxConfig)
 	return &indexService{
 		Service:         service,
 		indexRepository: indexRepository,
@@ -45,7 +45,7 @@ func (i indexService) IndexHitTarget(ctx context.Context, req v1.IndexRequest) (
 		return nil, errors.New("index not found")
 	}
 
-	line, err := i.kline.GetLine(req.InstId, req.Bar, "300")
+	line, err := i.kline.GetLine(req.InstId, req.Bar)
 	if err != nil {
 		i.logger.Error("【指标回测失败】未获取到K线数据", zap.Error(err))
 		return nil, err

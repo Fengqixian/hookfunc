@@ -20,7 +20,7 @@ func main() {
 	// Use the above `*gorm.DB` instance to initialize the generator,
 	// which is required to generate structs from db when using `GenerateModel/GenerateModelAs`
 	g.UseDB(db)
-	g.GenerateModel("coin")
+	g.GenerateModel("user_info")
 	// Execute the generator
 	g.Execute()
 }

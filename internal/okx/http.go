@@ -7,19 +7,18 @@ import (
 	"net/http"
 )
 
-type HttpOkx struct {
-	BaseURL string
-	Retry   int
+type Http struct {
+	Config *Config
 }
 
-func NewHttpOkx(baseURL string, retry int) *HttpOkx {
-	return &HttpOkx{BaseURL: baseURL, Retry: retry}
+func NewHttp(c *Config) *Http {
+	return &Http{c}
 }
 
-func (h *HttpOkx) Get(url string, v any) error {
+func (h *Http) Get(url string, v any) error {
 	method := "GET"
 	client := &http.Client{}
-	req, err := http.NewRequest(method, h.BaseURL+url, nil)
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		return err
 	}
@@ -30,7 +29,7 @@ func (h *HttpOkx) Get(url string, v any) error {
 		res, err := client.Do(req)
 		if err != nil {
 			count++
-			if count >= h.Retry {
+			if count >= h.Config.Retry {
 				return err
 			}
 			continue
@@ -58,7 +57,7 @@ func (h *HttpOkx) Get(url string, v any) error {
 	return nil
 }
 
-func (h *HttpOkx) Post(url string, data interface{}, v any) error {
+func (h *Http) Post(url string, data interface{}, v any) error {
 	// 将数据编码为 JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
@@ -67,13 +66,10 @@ func (h *HttpOkx) Post(url string, data interface{}, v any) error {
 
 	method := "POST"
 	client := &http.Client{}
-	req, err := http.NewRequest(method, h.BaseURL+url, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}
-
-	// 设置请求头
-	req.Header.Set("Content-Type", "application/json")
 
 	count := 0
 	var response http.Response
@@ -81,7 +77,7 @@ func (h *HttpOkx) Post(url string, data interface{}, v any) error {
 		res, err := client.Do(req)
 		if err != nil {
 			count++
-			if count >= h.Retry {
+			if count >= h.Config.Retry {
 				return err
 			}
 

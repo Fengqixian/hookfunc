@@ -10,6 +10,7 @@ import (
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"hookfunc/internal/handler"
+	"hookfunc/internal/okx"
 	"hookfunc/internal/repository"
 	"hookfunc/internal/server"
 	"hookfunc/internal/service"
@@ -22,7 +23,7 @@ import (
 
 // Injectors from wire.go:
 
-func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), error) {
+func NewWire(config *okx.Config, viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), error) {
 	jwtJWT := jwt.NewJwt(viperViper)
 	handlerHandler := handler.NewHandler(logger)
 	miniProgram := repository.NewWechatMiniProgram(viperViper)
@@ -33,7 +34,7 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	sidSid := sid.NewSid()
 	serviceService := service.NewService(transaction, logger, sidSid, jwtJWT)
 	userInfoRepository := repository.NewUserInfoRepository(repositoryRepository)
-	userInfoService := service.NewUserInfoService(serviceService, repositoryRepository, userInfoRepository)
+	userInfoService := service.NewUserInfoService(config, serviceService, repositoryRepository, userInfoRepository)
 	userHandler := handler.NewUserHandler(handlerHandler, userInfoService)
 	wechatService := service.NewWechatService(serviceService, repositoryRepository, userInfoService)
 	wechatHandler := handler.NewWechatHandler(handlerHandler, wechatService)
@@ -44,7 +45,7 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	barService := service.NewBarService(serviceService, barRepository)
 	barHandler := handler.NewBarHandler(handlerHandler, barService)
 	indexRepository := repository.NewIndexRepository(repositoryRepository)
-	indexService := service.NewIndexService(serviceService, indexRepository)
+	indexService := service.NewIndexService(config, serviceService, indexRepository)
 	indexHandler := handler.NewIndexHandler(handlerHandler, indexService)
 	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, strategyHandler, barHandler, indexHandler)
 	job := server.NewJob(logger)

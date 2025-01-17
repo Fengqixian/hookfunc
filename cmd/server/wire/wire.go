@@ -7,6 +7,7 @@ import (
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"hookfunc/internal/handler"
+	"hookfunc/internal/okx"
 	"hookfunc/internal/repository"
 	"hookfunc/internal/server"
 	"hookfunc/internal/service"
@@ -71,7 +72,7 @@ func newApp(httpServer *http.Server, job *server.Job) *app.App {
 	)
 }
 
-func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
+func NewWire(*okx.Config, *viper.Viper, *log.Logger) (*app.App, func(), error) {
 
 	panic(wire.Build(
 		repositorySet,

@@ -6,16 +6,17 @@ import (
 )
 
 type KLine struct {
-	Api *Api
+	Api    *Api
+	Config *Config
 }
 
-func NewLine(baseURL string, retry int) *KLine {
-	api := NewApi(baseURL, retry)
-	return &KLine{api}
+func NewLine(config *Config) *KLine {
+	api := NewApi(config)
+	return &KLine{api, config}
 }
 
-func (s *KLine) GetLine(instId string, bar string, limit string) ([]model.LineItem, error) {
-	data, err := s.Api.GetLine(instId, bar, limit)
+func (s *KLine) GetLine(instId string, bar string) ([]model.LineItem, error) {
+	data, err := s.Api.GetLine(instId, bar, s.Config.Limit)
 	if err != nil {
 		return nil, err
 	}
