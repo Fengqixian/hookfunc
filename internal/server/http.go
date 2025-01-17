@@ -34,7 +34,7 @@ func NewHTTPServer(
 
 	// swagger doc
 	docs.SwaggerInfo.BasePath = "/v1"
-	docs.SwaggerInfo.Host = "124.220.175.128"
+	docs.SwaggerInfo.Host = "124.220.175.128:8000"
 	s.GET("/swagger/*any", ginSwagger.WrapHandler(
 		swaggerfiles.Handler,
 		ginSwagger.DefaultModelsExpandDepth(-1),
