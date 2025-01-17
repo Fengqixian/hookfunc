@@ -20,16 +20,6 @@ func NewWechatHandler(handler *Handler, wechatService service.WechatService) *We
 	}
 }
 
-// ProgramQrCodeLogin godoc
-//
-//	@Summary	微信小程序登录二维码
-//	@Schemes
-//	@Description
-//	@Tags		微信小程序
-//	@Accept		json
-//	@Produce	json
-//	@Success	200	{object}	v1.Response
-//	@Router		/wechat/qr/login [post]
 func (h *WechatHandler) ProgramQrCodeLogin(ctx *gin.Context) {
 	loginQrCodeResponse, err := h.wechatService.GetLoginQrCode(ctx)
 	if err != nil {
@@ -41,17 +31,6 @@ func (h *WechatHandler) ProgramQrCodeLogin(ctx *gin.Context) {
 	v1.HandleSuccess(ctx, loginQrCodeResponse)
 }
 
-// ProgramLogin godoc
-//
-//	@Summary	微信小程序用户登录
-//	@Schemes
-//	@Description
-//	@Tags		微信小程序
-//	@Accept		json
-//	@Produce	json
-//	@Param		request	body		v1.WechatProgramLoginRequest	true	"params"
-//	@Success	200		{object}	v1.Response
-//	@Router		/wechat/program/login [post]
 func (h *WechatHandler) ProgramLogin(ctx *gin.Context) {
 	var req v1.WechatProgramLoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {

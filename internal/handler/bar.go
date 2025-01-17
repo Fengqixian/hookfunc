@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	v1 "hookfunc/api/v1"
+	"hookfunc/internal/okx"
 	"hookfunc/internal/service"
 	"net/http"
 )
@@ -10,12 +11,14 @@ import (
 type BarHandler struct {
 	*Handler
 	barService service.BarService
+	*okx.Config
 }
 
-func NewBarHandler(handler *Handler, barService service.BarService) *BarHandler {
+func NewBarHandler(config *okx.Config, handler *Handler, barService service.BarService) *BarHandler {
 	return &BarHandler{
 		Handler:    handler,
 		barService: barService,
+		Config:     config,
 	}
 }
 
@@ -59,4 +62,19 @@ func (h *BarHandler) ListCoin(ctx *gin.Context) {
 	}
 
 	v1.HandleSuccess(ctx, coins)
+}
+
+// ListSubscriptionPrice godoc
+//
+//	@Summary	获取订阅价格
+//	@Schemes
+//	@Description
+//	@Tags		公共
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Success	200	{object}	model.Bar
+//	@Router		/subscription/price [get]
+func (h *BarHandler) ListSubscriptionPrice(ctx *gin.Context) {
+	v1.HandleSuccess(ctx, h.Config.SubscriptionPrice)
 }

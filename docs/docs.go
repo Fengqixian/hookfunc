@@ -424,6 +424,33 @@ const docTemplate = `{
                 }
             }
         },
+        "/subscription/price": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "公共"
+                ],
+                "summary": "获取订阅价格",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Bar"
+                        }
+                    }
+                }
+            }
+        },
         "/transaction/recharge/confirm": {
             "get": {
                 "security": [
@@ -524,61 +551,6 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
-                    }
-                }
-            }
-        },
-        "/wechat/program/login": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "微信小程序"
-                ],
-                "summary": "微信小程序用户登录",
-                "parameters": [
-                    {
-                        "description": "params",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.WechatProgramLoginRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/wechat/qr/login": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "微信小程序"
-                ],
-                "summary": "微信小程序登录二维码",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/v1.Response"
-                        }
                     }
                 }
             }
@@ -769,18 +741,6 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.Response": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {},
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
         "v1.SendSMSCodeRequest": {
             "type": "object",
             "required": [
@@ -823,17 +783,6 @@ const docTemplate = `{
                 },
                 "userId": {
                     "type": "integer"
-                }
-            }
-        },
-        "v1.WechatProgramLoginRequest": {
-            "type": "object",
-            "required": [
-                "jsCode"
-            ],
-            "properties": {
-                "jsCode": {
-                    "type": "string"
                 }
             }
         }

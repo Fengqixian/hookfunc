@@ -30,7 +30,7 @@ import (
 func main() {
 	oneUsdt := 1000000
 	// 月： 9U 季： 24U 年： 99U
-	subscriptionPrice := []int{oneUsdt * 9, oneUsdt * 24, oneUsdt * 99}
+	subscriptionPrice := []int64{int64(oneUsdt * 9), int64(oneUsdt * 24), int64(oneUsdt * 99)}
 
 	var envConf = flag.String("conf", "config/local.yml", "config path, eg: -conf ./config/local.yml")
 	okxConfig := okx.Config{}

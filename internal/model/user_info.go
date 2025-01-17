@@ -12,16 +12,16 @@ const TableNameUserInfo = "user_info"
 
 // UserInfo 用户信息表
 type UserInfo struct {
-	ID              int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键ID" json:"id"`                        // 主键ID
-	Openid          string    `gorm:"column:openid;not null;comment:微信openId" json:"openid"`                                 // 微信openId
-	Wallet          string    `gorm:"column:wallet;comment:钱包地址" json:"wallet"`                                              // 钱包地址
-	NickName        string    `gorm:"column:nick_name;comment:用户昵称" json:"nick_name"`                                        // 用户昵称
-	Avatar          string    `gorm:"column:avatar;comment:用户头像" json:"avatar"`                                              // 用户头像
-	PhoneNumber     string    `gorm:"column:phone_number;comment:电话" json:"phone_number"`                                    // 电话
-	SubscriptionEnd time.Time `gorm:"column:subscription_end;comment:订阅结束时间" json:"subscription_end"`                        // 订阅结束时间
-	CreateTime      time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
-	UpdateTime      time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"update_time"` // 更新时间
-	Deleted         bool      `gorm:"column:deleted;not null;comment:是否删除" json:"deleted"`                                   // 是否删除
+	ID              int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键ID" json:"id"`                       // 主键ID
+	Openid          string    `gorm:"column:openid;not null;comment:微信openId" json:"openid"`                                // 微信openId
+	Wallet          string    `gorm:"column:wallet;comment:钱包地址" json:"wallet"`                                             // 钱包地址
+	NickName        string    `gorm:"column:nick_name;comment:用户昵称" json:"nickName"`                                        // 用户昵称
+	Avatar          string    `gorm:"column:avatar;comment:用户头像" json:"avatar"`                                             // 用户头像
+	PhoneNumber     string    `gorm:"column:phone_number;comment:电话" json:"phoneNumber"`                                    // 电话
+	SubscriptionEnd time.Time `gorm:"column:subscription_end;comment:订阅结束时间" json:"subscriptionEnd"`                        // 订阅结束时间
+	CreateTime      time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createTime"` // 创建时间
+	UpdateTime      time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updateTime"` // 更新时间
+	Deleted         bool      `gorm:"column:deleted;not null;comment:是否删除" json:"deleted"`                                  // 是否删除
 }
 
 // TableName UserInfo's table name

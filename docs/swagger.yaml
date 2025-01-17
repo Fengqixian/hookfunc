@@ -129,14 +129,6 @@ definitions:
     - indexId
     - warningConfig
     type: object
-  v1.Response:
-    properties:
-      code:
-        type: integer
-      data: {}
-      message:
-        type: string
-    type: object
   v1.SendSMSCodeRequest:
     properties:
       code:
@@ -166,13 +158,6 @@ definitions:
         type: integer
     required:
     - strategyId
-    type: object
-  v1.WechatProgramLoginRequest:
-    properties:
-      jsCode:
-        type: string
-    required:
-    - jsCode
     type: object
 host: localhost:8000
 info:
@@ -432,6 +417,22 @@ paths:
       summary: 更新策略订阅状态
       tags:
       - 策略
+  /subscription/price:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Bar'
+      security:
+      - Bearer: []
+      summary: 获取订阅价格
+      tags:
+      - 公共
   /transaction/recharge/confirm:
     get:
       consumes:
@@ -495,41 +496,6 @@ paths:
       summary: 核对验证码
       tags:
       - 短信
-  /wechat/program/login:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: params
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/v1.WechatProgramLoginRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 微信小程序用户登录
-      tags:
-      - 微信小程序
-  /wechat/qr/login:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 微信小程序登录二维码
-      tags:
-      - 微信小程序
 securityDefinitions:
   Bearer:
     in: header

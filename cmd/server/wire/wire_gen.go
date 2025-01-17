@@ -43,7 +43,7 @@ func NewWire(config *okx.Config, viperViper *viper.Viper, logger *log.Logger) (*
 	strategyHandler := handler.NewStrategyHandler(handlerHandler, strategyService)
 	barRepository := repository.NewBarRepository(repositoryRepository)
 	barService := service.NewBarService(serviceService, barRepository)
-	barHandler := handler.NewBarHandler(handlerHandler, barService)
+	barHandler := handler.NewBarHandler(config, handlerHandler, barService)
 	indexRepository := repository.NewIndexRepository(repositoryRepository)
 	indexService := service.NewIndexService(config, serviceService, indexRepository)
 	indexHandler := handler.NewIndexHandler(handlerHandler, indexService)
