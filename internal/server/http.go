@@ -69,6 +69,7 @@ func NewHTTPServer(
 		strictAuthRouter := v1.Group("/").Use(middleware.StrictAuth(jwt, logger))
 		{
 			strictAuthRouter.GET("/user", userHandler.GetProfile)
+			strictAuthRouter.POST("/update/user", userHandler.UpdateProfile)
 			strictAuthRouter.GET("/transaction/recharge/confirm", userHandler.ConfirmRechargeRecord)
 		}
 

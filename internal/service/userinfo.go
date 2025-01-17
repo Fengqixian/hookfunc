@@ -25,6 +25,7 @@ type UserInfoService interface {
 	SendNoteVerificationCode(ctx context.Context, phone string) error
 	VerificationCode(ctx context.Context, params v1.SendSMSCodeRequest) (string, error)
 	ConfirmRechargeRecord(ctx context.Context, userId int64) (bool, error)
+	UpdateUserInfo(ctx context.Context, userInfo *model.UserInfo) error
 }
 
 func NewUserInfoService(config *okx.Config, service *Service, repository *repository.Repository, userInfoRepository repository.UserInfoRepository) UserInfoService {
@@ -44,6 +45,10 @@ type userInfoService struct {
 	*repository.Repository
 	*okx.Config
 	*okx.Http
+}
+
+func (s *userInfoService) UpdateUserInfo(ctx context.Context, userInfo *model.UserInfo) error {
+	return s.userInfoRepository.UpdateUserInfo(ctx, userInfo)
 }
 
 func (s *userInfoService) ConfirmRechargeRecord(ctx context.Context, userId int64) (bool, error) {

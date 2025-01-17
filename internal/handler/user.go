@@ -48,6 +48,49 @@ func (h *UserHandler) GetProfile(ctx *gin.Context) {
 	v1.HandleSuccess(ctx, user)
 }
 
+// UpdateProfile godoc
+//
+//	@Summary	更新用户信息
+//	@Schemes
+//	@Description
+//	@Tags		用户模块
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		Authorization	header		string	true	"Authorization token"
+//	@Param		request	body	v1.UpdateUserInfoRequest	true	"params"
+//	@Success	200
+//	@Router		/update/user [post]
+func (h *UserHandler) UpdateProfile(ctx *gin.Context) {
+	userId := GetUserIdFromCtx(ctx)
+	userinfo, err := h.userInfoService.GetUserInfoById(ctx, userId)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusUnauthorized, v1.ErrUnauthorized, nil)
+		return
+	}
+	var req v1.UpdateUserInfoRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		return
+	}
+
+	if req.Wallet != "" {
+		userinfo.Wallet = req.Wallet
+	}
+
+	if req.PhoneNumber != "" {
+		userinfo.PhoneNumber = req.PhoneNumber
+	}
+
+	err = h.userInfoService.UpdateUserInfo(ctx, userinfo)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, userinfo)
+}
+
 // SendSmsCode godoc
 //
 //	@Summary	发送短信验证码

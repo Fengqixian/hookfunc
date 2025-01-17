@@ -159,6 +159,13 @@ definitions:
     required:
     - strategyId
     type: object
+  v1.UpdateUserInfoRequest:
+    properties:
+      phoneNumber:
+        type: string
+      wallet:
+        type: string
+    type: object
 host: localhost:8000
 info:
   contact:
@@ -453,6 +460,32 @@ paths:
       summary: 充值确认
       tags:
       - 交易
+  /update/user:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.UpdateUserInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 更新用户信息
+      tags:
+      - 用户模块
   /user:
     get:
       consumes:
