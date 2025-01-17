@@ -424,6 +424,22 @@ paths:
       summary: 更新策略订阅状态
       tags:
       - 策略
+  /subscription/pay/wallet:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: 获取订阅支付钱包地址
+      tags:
+      - 公共
   /subscription/price:
     get:
       consumes:

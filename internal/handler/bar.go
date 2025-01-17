@@ -78,3 +78,18 @@ func (h *BarHandler) ListCoin(ctx *gin.Context) {
 func (h *BarHandler) ListSubscriptionPrice(ctx *gin.Context) {
 	v1.HandleSuccess(ctx, h.Config.SubscriptionPrice)
 }
+
+// GetSubscriptionPayWallet godoc
+//
+//	@Summary	获取订阅支付钱包地址
+//	@Schemes
+//	@Description
+//	@Tags		公共
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Success	200	{object}	string
+//	@Router		/subscription/pay/wallet [get]
+func (h *BarHandler) GetSubscriptionPayWallet(ctx *gin.Context) {
+	v1.HandleSuccess(ctx, h.Config.WalletAddress)
+}

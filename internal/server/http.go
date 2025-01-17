@@ -63,6 +63,7 @@ func NewHTTPServer(
 			noAuthRouter.POST("/verification/sms/code", userHandler.VerificationSmsCode)
 			noAuthRouter.GET("/coin/list", barHandler.ListCoin)
 			noAuthRouter.GET("/subscription/price", barHandler.ListSubscriptionPrice)
+			noAuthRouter.GET("/subscription/pay/wallet", barHandler.GetSubscriptionPayWallet)
 		}
 
 		// Strict permission routing group

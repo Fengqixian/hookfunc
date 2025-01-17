@@ -424,6 +424,33 @@ const docTemplate = `{
                 }
             }
         },
+        "/subscription/pay/wallet": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "公共"
+                ],
+                "summary": "获取订阅支付钱包地址",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/subscription/price": {
             "get": {
                 "security": [
