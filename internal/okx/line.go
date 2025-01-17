@@ -119,7 +119,7 @@ func (s *KLine) CalculateKDJ(data []model.LineItem, N int) []model.LineItem {
 	return data
 }
 
-func (s *KLine) CalculateRSI(prices []model.LineItem, period int) []model.LineItem {
+func (s *KLine) CalculateRSI(prices []model.LineItem, period int64) []model.LineItem {
 	var gains, losses []float64
 
 	// 计算每日的涨跌幅
@@ -139,7 +139,7 @@ func (s *KLine) CalculateRSI(prices []model.LineItem, period int) []model.LineIt
 	avgLoss := average(losses[:period])
 
 	// 计算 RSI 并更新到 prices 对象中
-	for i := period; i < len(prices); i++ {
+	for i := period; i < int64(len(prices)); i++ {
 		rs := avgGain / avgLoss
 		rsiValue := 100 - (100 / (1 + rs))
 		prices[i-1].Index.Rsi = rsiValue // 直接将 RSI 值写入 prices[i].RSI

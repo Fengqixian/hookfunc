@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	v1 "hookfunc/api/v1"
 	"hookfunc/internal/service"
 	"net/http"
@@ -61,6 +62,7 @@ func (h *IndexHandler) IndexTest(ctx *gin.Context) {
 
 	result, err := h.indexService.IndexHitTarget(ctx, req)
 	if err != nil {
+		h.logger.Error("【指标回测失败】", zap.Error(err))
 		v1.HandleError(ctx, http.StatusInternalServerError, v1.ErrServer, nil)
 		return
 	}
