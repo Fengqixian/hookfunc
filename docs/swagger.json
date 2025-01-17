@@ -605,7 +605,7 @@
                     "description": "更新时间",
                     "type": "string"
                 },
-                "warningConfig": {
+                "warningConfigArray": {
                     "description": "预警配置",
                     "type": "string"
                 }
@@ -709,7 +709,7 @@
                 "bar",
                 "indexConfig",
                 "indexId",
-                "warningIndex"
+                "warningConfig"
             ],
             "properties": {
                 "InstId": {
@@ -724,8 +724,8 @@
                 "indexId": {
                     "type": "integer"
                 },
-                "warningIndex": {
-                    "type": "integer"
+                "warningConfig": {
+                    "type": "string"
                 }
             }
         },

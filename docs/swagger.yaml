@@ -43,7 +43,7 @@ definitions:
       updateTime:
         description: 更新时间
         type: string
-      warningConfig:
+      warningConfigArray:
         description: 预警配置
         type: string
     type: object
@@ -120,14 +120,14 @@ definitions:
         type: string
       indexId:
         type: integer
-      warningIndex:
-        type: integer
+      warningConfig:
+        type: string
     required:
     - InstId
     - bar
     - indexConfig
     - indexId
-    - warningIndex
+    - warningConfig
     type: object
   v1.Response:
     properties:

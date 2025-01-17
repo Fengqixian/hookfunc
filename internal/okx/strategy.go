@@ -6,11 +6,17 @@ import (
 )
 
 type Strategy interface {
-	Execute(line []model.LineItem, params []int64, warningIndex int32) (any, error)
+	Execute(line []model.LineItem, params []int64, warningConfig string) (any, error)
 }
 
 type WarningStrategy struct {
 	Strategy map[string]Strategy
+}
+
+type WarningConfig struct {
+	Index int    `json:"index"`
+	Name  string `json:"name"`
+	Value int64  `json:"value"`
 }
 
 func NewWarningStrategy(kline *KLine) *WarningStrategy {
@@ -24,20 +30,26 @@ func NewWarningStrategy(kline *KLine) *WarningStrategy {
  * MACD Strategy
  * name: MACD
  * default_config: [12, 26, 9]
- * warning_config: [{"name":"金叉"},{"name":"死叉"},{"name":"多头"},{"name":"空头"}]
+ * warning_config_array: [{"index": 0, "name":"金叉"},{"index": 1, "name":"死叉"},{"index": 2, "name":"多头"},{"index": 3, "name":"空头"}]
  */
 
 type MACDStrategy struct {
 	Kline *KLine
 }
 
-func (s *MACDStrategy) Execute(line []model.LineItem, params []int64, warningIndex int32) (any, error) {
+func (s *MACDStrategy) Execute(line []model.LineItem, params []int64, warningConfigString string) (any, error) {
 	if len(params) < 3 {
 		return nil, errors.New("MACD 策略执行失败: invalid params")
 	}
 
 	line = s.Kline.CalculateMACD(line, params[0], params[1], params[2])
-	switch warningIndex {
+	var warningConfig WarningConfig
+	err := ConvertStringToObject(warningConfigString, &warningConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	switch warningConfig.Index {
 	case 0: // 金叉
 		return MACDCross(line, true), nil
 	case 1: // 死叉

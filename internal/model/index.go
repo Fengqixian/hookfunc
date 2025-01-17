@@ -12,15 +12,15 @@ const TableNameIndex = "index"
 
 // Index 指标信息
 type Index struct {
-	ID            int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键ID" json:"id"`                       // 主键ID
-	Name          string    `gorm:"column:name;not null;comment:指标名称" json:"name"`                                        // 指标名称
-	Icon          string    `gorm:"column:icon;not null;comment:指标图标" json:"icon"`                                        // 指标图标
-	Desc          string    `gorm:"column:desc;not null;comment:指标简介" json:"desc"`                                        // 指标简介
-	DefaultConfig string    `gorm:"column:default_config;not null;comment:指标简介" json:"defaultConfig"`                     // 指标简介
-	WarningConfig string    `gorm:"column:warning_config;not null;comment:预警配置" json:"warningConfig"`                     // 预警配置
-	CreateTime    time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createTime"` // 创建时间
-	UpdateTime    time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updateTime"` // 更新时间
-	Deleted       bool      `gorm:"column:deleted;not null;comment:是否删除" json:"deleted"`                                  // 是否删除
+	ID                 int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键ID" json:"id"`                       // 主键ID
+	Name               string    `gorm:"column:name;not null;comment:指标名称" json:"name"`                                        // 指标名称
+	Icon               string    `gorm:"column:icon;not null;comment:指标图标" json:"icon"`                                        // 指标图标
+	Desc               string    `gorm:"column:desc;not null;comment:指标简介" json:"desc"`                                        // 指标简介
+	DefaultConfig      string    `gorm:"column:default_config;not null;comment:指标简介" json:"defaultConfig"`                     // 指标简介
+	WarningConfigArray string    `gorm:"column:warning_config_array;not null;comment:预警配置" json:"warningConfigArray"`          // 预警配置
+	CreateTime         time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createTime"` // 创建时间
+	UpdateTime         time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updateTime"` // 更新时间
+	Deleted            bool      `gorm:"column:deleted;not null;comment:是否删除" json:"deleted"`                                  // 是否删除
 }
 
 // TableName Index's table name

@@ -19,9 +19,9 @@ type CreateStrategyRequest struct {
 }
 
 type IndexRequest struct {
-	IndexId      int64  `json:"indexId" binding:"required"`
-	InstId       string `json:"InstId" binding:"required"`
-	IndexConfig  string `json:"indexConfig" binding:"required"`
-	WarningIndex int32  `json:"warningIndex" binding:"required"`
-	Bar          string `json:"bar" binding:"required"`
+	IndexId       int64  `json:"indexId" binding:"required"`
+	InstId        string `json:"InstId" binding:"required"`
+	IndexConfig   string `json:"indexConfig" binding:"required"`
+	WarningConfig string `json:"warningConfig" binding:"required"`
+	Bar           string `json:"bar" binding:"required"`
 }

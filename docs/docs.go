@@ -612,7 +612,7 @@ const docTemplate = `{
                     "description": "更新时间",
                     "type": "string"
                 },
-                "warningConfig": {
+                "warningConfigArray": {
                     "description": "预警配置",
                     "type": "string"
                 }
@@ -716,7 +716,7 @@ const docTemplate = `{
                 "bar",
                 "indexConfig",
                 "indexId",
-                "warningIndex"
+                "warningConfig"
             ],
             "properties": {
                 "InstId": {
@@ -731,8 +731,8 @@ const docTemplate = `{
                 "indexId": {
                     "type": "integer"
                 },
-                "warningIndex": {
-                    "type": "integer"
+                "warningConfig": {
+                    "type": "string"
                 }
             }
         },

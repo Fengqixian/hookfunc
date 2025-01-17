@@ -1,8 +1,18 @@
 package okx
 
 import (
+	"encoding/json"
 	"hookfunc/internal/model"
 )
+
+func ConvertStringToObject(body string, v any) error {
+	err := json.Unmarshal([]byte(body), v)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func MACDCross(line []model.LineItem, side bool) []model.LineItem {
 	var res []model.LineItem

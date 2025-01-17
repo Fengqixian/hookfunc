@@ -59,12 +59,12 @@ func (s *strategyService) CreateStrategy(ctx context.Context, req v1.CreateStrat
 	var strategyIndexList []model.StrategyIndex
 	for _, index := range req.IndexList {
 		strategyIndex := model.StrategyIndex{
-			StrategyID:   strategy.ID,
-			UserID:       req.UserId,
-			IndexID:      index.IndexId,
-			Bar:          index.Bar,
-			IndexConfig:  index.IndexConfig,
-			WarningIndex: index.WarningIndex,
+			StrategyID:    strategy.ID,
+			UserID:        req.UserId,
+			IndexID:       index.IndexId,
+			Bar:           index.Bar,
+			IndexConfig:   index.IndexConfig,
+			WarningConfig: index.WarningConfig,
 		}
 		strategyIndexList = append(strategyIndexList, strategyIndex)
 	}
