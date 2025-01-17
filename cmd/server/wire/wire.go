@@ -7,6 +7,7 @@ import (
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"hookfunc/internal/handler"
+	"hookfunc/internal/okx"
 	"hookfunc/internal/repository"
 	"hookfunc/internal/server"
 	"hookfunc/internal/service"
@@ -29,6 +30,9 @@ var repositorySet = wire.NewSet(
 	repository.NewUserAddressRepository,
 	repository.NewOrderInfoRepository,
 	repository.NewOrderGoodsRepository,
+	repository.NewStrategyRepository,
+	repository.NewBarRepository,
+	repository.NewIndexRepository,
 )
 
 var serviceSet = wire.NewSet(
@@ -40,17 +44,18 @@ var serviceSet = wire.NewSet(
 	service.NewUserAddressService,
 	service.NewOrderInfoService,
 	service.NewOrderGoodsService,
+	service.NewStrategyService,
+	service.NewBarService,
+	service.NewIndexService,
 )
 
 var handlerSet = wire.NewSet(
 	handler.NewHandler,
 	handler.NewUserHandler,
-	handler.NewResourceHandler,
 	handler.NewWechatHandler,
-	handler.NewGoodsHandler,
-	handler.NewUserAddressHandler,
-	handler.NewOrderInfoHandler,
-	handler.NewOrderGoodsHandler,
+	handler.NewStrategyHandler,
+	handler.NewBarHandler,
+	handler.NewIndexHandler,
 )
 
 var serverSet = wire.NewSet(
@@ -67,7 +72,7 @@ func newApp(httpServer *http.Server, job *server.Job) *app.App {
 	)
 }
 
-func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
+func NewWire(*okx.Config, *viper.Viper, *log.Logger) (*app.App, func(), error) {
 
 	panic(wire.Build(
 		repositorySet,

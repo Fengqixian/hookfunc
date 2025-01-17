@@ -20,9 +20,9 @@ func NewHTTPServer(
 	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
 	wechatHandler *handler.WechatHandler,
-	goodsHandler *handler.GoodsHandler,
-	userAddressHandler *handler.UserAddressHandler,
-	orderInfoHandler *handler.OrderInfoHandler,
+	strategyHandler *handler.StrategyHandler,
+	barHandler *handler.BarHandler,
+	indexHandler *handler.IndexHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(
@@ -59,29 +59,41 @@ func NewHTTPServer(
 		{
 			noAuthRouter.POST("/wechat/qr/login", wechatHandler.ProgramQrCodeLogin)
 			noAuthRouter.POST("/wechat/program/login", wechatHandler.ProgramLogin)
-		}
-		// Non-strict permission routing group
-		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger), middleware.UserRole(logger))
-		{
-
-			noStrictAuthRouter.POST("/goods/info", goodsHandler.Info)
-			noStrictAuthRouter.GET("/goods/list", goodsHandler.List)
-
-			noStrictAuthRouter.POST("/order/place", orderInfoHandler.Place)
-			noStrictAuthRouter.POST("/order/cancel", orderInfoHandler.Cancel)
-			noStrictAuthRouter.GET("/order/list", orderInfoHandler.List)
-
-			noStrictAuthRouter.GET("/user/address/list", userAddressHandler.List)
-			noStrictAuthRouter.POST("/user/address/update", userAddressHandler.Update)
+			noAuthRouter.POST("/sms/code", userHandler.SendSmsCode)
+			noAuthRouter.POST("/verification/sms/code", userHandler.VerificationSmsCode)
+			noAuthRouter.GET("/coin/list", barHandler.ListCoin)
+			noAuthRouter.GET("/subscription/price", barHandler.ListSubscriptionPrice)
+			noAuthRouter.GET("/subscription/pay/wallet", barHandler.GetSubscriptionPayWallet)
 		}
 
 		// Strict permission routing group
 		strictAuthRouter := v1.Group("/").Use(middleware.StrictAuth(jwt, logger))
 		{
 			strictAuthRouter.GET("/user", userHandler.GetProfile)
-			strictAuthRouter.POST("/user/address/create", userAddressHandler.Create)
+			strictAuthRouter.POST("/update/user", userHandler.UpdateProfile)
+			strictAuthRouter.GET("/transaction/recharge/confirm", userHandler.ConfirmRechargeRecord)
+		}
+
+		// Strict permission routing group
+		strategyRouter := v1.Group("/strategy").Use(middleware.StrictAuth(jwt, logger))
+		{
+			strategyRouter.GET("/list", strategyHandler.ListStrategy)
+			strategyRouter.POST("/index/list", strategyHandler.ListStrategyIndex)
+			strategyRouter.POST("/index/delete", strategyHandler.DeleteStrategyIndex)
+			strategyRouter.POST("/delete", strategyHandler.DeleteStrategy)
+			strategyRouter.POST("/create", strategyHandler.CreateStrategy)
+			strategyRouter.POST("/subscription", strategyHandler.UpdateStrategySubscriptionState)
+		}
+
+		// Strict permission routing group
+		indexRouter := v1.Group("/index")
+		{
+			indexRouter.GET("/bar/list", barHandler.ListBar)
+			indexRouter.GET("/list", indexHandler.ListIndex)
+			indexRouter.POST("/test", indexHandler.IndexTest)
 
 		}
+
 	}
 
 	return s

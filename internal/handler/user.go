@@ -47,3 +47,125 @@ func (h *UserHandler) GetProfile(ctx *gin.Context) {
 
 	v1.HandleSuccess(ctx, user)
 }
+
+// UpdateProfile godoc
+//
+//	@Summary	更新用户信息
+//	@Schemes
+//	@Description
+//	@Tags		用户模块
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		Authorization	header		string	true	"Authorization token"
+//	@Param		request	body	v1.UpdateUserInfoRequest	true	"params"
+//	@Success	200
+//	@Router		/update/user [post]
+func (h *UserHandler) UpdateProfile(ctx *gin.Context) {
+	userId := GetUserIdFromCtx(ctx)
+	userinfo, err := h.userInfoService.GetUserInfoById(ctx, userId)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusUnauthorized, v1.ErrUnauthorized, nil)
+		return
+	}
+	var req v1.UpdateUserInfoRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		return
+	}
+
+	if req.Wallet != "" {
+		userinfo.Wallet = req.Wallet
+	}
+
+	if req.PhoneNumber != "" {
+		userinfo.PhoneNumber = req.PhoneNumber
+	}
+
+	err = h.userInfoService.UpdateUserInfo(ctx, userinfo)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, userinfo)
+}
+
+// SendSmsCode godoc
+//
+//	@Summary	发送短信验证码
+//	@Schemes
+//	@Description
+//	@Tags		短信
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		request	body	v1.SendSMSCodeRequest	true	"params"
+//	@Success	200
+//	@Router		/sms/code [post]
+func (h *UserHandler) SendSmsCode(ctx *gin.Context) {
+	var req v1.SendSMSCodeRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		return
+	}
+
+	err := h.userInfoService.SendNoteVerificationCode(ctx, req.PhoneNumber)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, nil)
+}
+
+// VerificationSmsCode godoc
+//
+//	@Summary	核对验证码
+//	@Schemes
+//	@Description
+//	@Tags		短信
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		request	body	v1.SendSMSCodeRequest	true	"params"
+//	@Success	200
+//	@Router		/verification/sms/code [post]
+func (h *UserHandler) VerificationSmsCode(ctx *gin.Context) {
+	var req v1.SendSMSCodeRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+		return
+	}
+
+	token, err := h.userInfoService.VerificationCode(ctx, req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, token)
+}
+
+// ConfirmRechargeRecord godoc
+//
+//	@Summary	充值确认
+//	@Schemes
+//	@Description
+//	@Tags		交易
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//	@Param		Authorization	header		string	true	"Authorization token"
+//	@Success	200
+//	@Router		/transaction/recharge/confirm [get]
+func (h *UserHandler) ConfirmRechargeRecord(ctx *gin.Context) {
+	userId := GetUserIdFromCtx(ctx)
+	result, err := h.userInfoService.ConfirmRechargeRecord(ctx, userId)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+
+	v1.HandleSuccess(ctx, result)
+}

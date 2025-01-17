@@ -1,82 +1,97 @@
 definitions:
-  model.OrderGoods:
+  model.Bar:
     properties:
-      amount:
-        description: 商品数量
-        type: integer
       createTime:
         description: 创建时间
         type: string
       deleted:
         description: 是否删除
-        type: integer
-      goodsId:
-        description: 商品ID
-        type: integer
+        type: boolean
       id:
         description: 主键ID
-        type: integer
-      orderId:
-        description: 订单ID
-        type: integer
-      price:
-        description: 商品单价
         type: integer
       updateTime:
         description: 更新时间
         type: string
+      value:
+        description: bar value
+        type: string
     type: object
-  model.UserAddressInfo:
+  model.Index:
     properties:
-      addressDetail:
-        description: 详细地址
-        type: string
-      city:
-        description: 市
-        type: string
       createTime:
         description: 创建时间
         type: string
-      defaultState:
-        description: 是否默认地址
-        type: integer
+      defaultConfig:
+        description: 指标简介
+        type: string
       deleted:
         description: 是否删除
-        type: integer
+        type: boolean
+      desc:
+        description: 指标简介
+        type: string
+      icon:
+        description: 指标图标
+        type: string
       id:
         description: 主键ID
         type: integer
-      latitude:
-        description: 纬度
+      name:
+        description: 指标名称
+        type: string
+      updateTime:
+        description: 更新时间
+        type: string
+      warningConfigArray:
+        description: 预警配置
+        type: string
+    type: object
+  model.Strategy:
+    properties:
+      createTime:
+        description: 创建时间
+        type: string
+      deleted:
+        description: 是否删除
+        type: boolean
+      id:
+        description: 主键ID
         type: integer
-      longitude:
-        description: 经度
+      instId:
+        description: 币种ID
+        type: string
+      strategyName:
+        description: 策略名称
+        type: string
+      subscriptionState:
+        description: '订阅状态: 0 未订阅 1 已订阅'
         type: integer
-      phoneNumber:
-        description: 收获人电话
-        type: string
-      province:
-        description: 省
-        type: string
-      region:
-        description: 区
-        type: string
       updateTime:
         description: 更新时间
         type: string
       userId:
         description: 用户ID
         type: integer
-      userName:
-        description: 收获人姓名
-        type: string
     type: object
-  v1.CancelOrderRequest:
+  v1.CreateStrategyRequest:
     properties:
-      orderId:
+      InstId:
+        type: string
+      indexList:
+        items:
+          $ref: '#/definitions/v1.IndexRequest'
+        type: array
+      name:
+        type: string
+      subscriptionState:
+        type: integer
+      userId:
         type: integer
     required:
-    - orderId
+    - InstId
+    - indexList
+    - name
     type: object
   v1.GetProfileResponse:
     properties:
@@ -95,153 +110,61 @@ definitions:
       userId:
         type: string
     type: object
-  v1.Goods:
+  v1.IndexRequest:
     properties:
-      id:
-        type: integer
-    type: object
-  v1.OrderGoods:
-    properties:
-      amount:
-        description: 商品数量
-        type: integer
-      goodsId:
-        description: 商品ID
-        type: integer
-      goodsName:
-        description: 商品名称
+      InstId:
         type: string
-      price:
-        description: 单价
-        type: integer
-      total:
-        description: 商品金额
-        type: integer
-    type: object
-  v1.OrderInfoResponse:
-    properties:
-      addressDetail:
-        description: 详细地址
+      bar:
         type: string
-      city:
-        description: 市
+      indexConfig:
         type: string
-      goods:
-        description: 商品列表
-        items:
-          $ref: '#/definitions/v1.OrderGoods'
-        type: array
-      latitude:
-        description: 纬度
+      indexId:
         type: integer
-      longitude:
-        description: 经度
-        type: integer
-      orderId:
-        description: 订单ID
-        type: integer
-      orderState:
-        description: 订单状态
-        type: integer
-      paymentModel:
-        description: 支付方式
-        type: integer
-      phoneNumber:
-        description: 收获人电话
+      warningConfig:
         type: string
-      placeTime:
-        description: 下单时间
-        type: string
-      province:
-        description: 省
-        type: string
-      region:
-        description: 区
-        type: string
-      remark:
-        description: 订单备注
-        type: string
-      total:
-        description: 订单金额
-        type: integer
-      userId:
-        description: 用户ID
-        type: integer
-      userName:
-        description: 收获人姓名
-        type: string
-    type: object
-  v1.PlaceOrderRequest:
-    properties:
-      addressId:
-        type: integer
-      deliveryTime:
-        type: string
-      orderGoods:
-        items:
-          $ref: '#/definitions/model.OrderGoods'
-        type: array
-      remark:
-        type: string
-      userId:
-        type: integer
     required:
-    - addressId
-    - deliveryTime
-    - orderGoods
+    - InstId
+    - bar
+    - indexConfig
+    - indexId
+    - warningConfig
     type: object
-  v1.Response:
+  v1.SendSMSCodeRequest:
     properties:
       code:
-        type: integer
-      data: {}
-      message:
+        example: "123456"
         type: string
-    type: object
-  v1.UserAddressInfoRequest:
-    properties:
-      addressDetail:
-        description: 详细地址
-        type: string
-      city:
-        description: 市
-        type: string
-      latitude:
-        description: 纬度
-        type: integer
-      longitude:
-        description: 经度
-        type: integer
       phoneNumber:
-        description: 收获人电话
+        example: "1234567890"
         type: string
-      province:
-        description: 省
-        type: string
-      region:
-        description: 区
-        type: string
+    required:
+    - code
+    - phoneNumber
+    type: object
+  v1.StrategyIndexRequest:
+    properties:
+      strategyIndexId:
+        type: integer
       userId:
         type: integer
-      userName:
-        description: 收获人姓名
-        type: string
     required:
-    - addressDetail
-    - city
-    - latitude
-    - longitude
-    - phoneNumber
-    - province
-    - region
-    - userName
+    - strategyIndexId
     type: object
-  v1.WechatProgramLoginRequest:
+  v1.StrategyRequest:
     properties:
-      jsCode:
-        type: string
+      strategyId:
+        type: integer
+      userId:
+        type: integer
     required:
-    - jsCode
+    - strategyId
+    type: object
+  v1.UpdateUserInfoRequest:
+    properties:
+      phoneNumber:
+        type: string
+      wallet:
+        type: string
     type: object
 host: localhost:8000
 info:
@@ -257,28 +180,7 @@ info:
   title: Nunu Example API
   version: 1.0.0
 paths:
-  /goods/info:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: params
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/v1.Goods'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 通过商品ID获取商品信息
-      tags:
-      - 商品
-  /goods/list:
+  /coin/list:
     get:
       consumes:
       - application/json
@@ -288,11 +190,45 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 获取所有商品信息
+            $ref: '#/definitions/model.Bar'
+      security:
+      - Bearer: []
+      summary: 币币信息
       tags:
-      - 商品
-  /order/cancel:
+      - 公共
+  /index/bar/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Bar'
+      security:
+      - Bearer: []
+      summary: 时间线
+      tags:
+      - 公共
+  /index/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Index'
+      security:
+      - Bearer: []
+      summary: 指标列表
+      tags:
+      - 指标
+  /index/test:
     post:
       consumes:
       - application/json
@@ -302,7 +238,149 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/v1.CancelOrderRequest'
+          $ref: '#/definitions/v1.IndexRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Index'
+      security:
+      - Bearer: []
+      summary: 指标回测
+      tags:
+      - 指标
+  /sms/code:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.SendSMSCodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 发送短信验证码
+      tags:
+      - 短信
+  /strategy/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.CreateStrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 创建策略
+      tags:
+      - 策略
+  /strategy/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.StrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 删除策略
+      tags:
+      - 策略
+  /strategy/index/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.StrategyIndexRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 删除策略关联指标
+      tags:
+      - 策略
+  /strategy/index/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.StrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 获取策略关联指标
+      tags:
+      - 策略
+  /strategy/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
       - description: Authorization token
         in: header
         name: Authorization
@@ -314,11 +392,39 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 取消订单
+            $ref: '#/definitions/model.Strategy'
+      security:
+      - Bearer: []
+      summary: 获取当前用户的策略列表
       tags:
-      - 订单
-  /order/list:
+      - 策略
+  /strategy/subscription:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.StrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 更新策略订阅状态
+      tags:
+      - 策略
+  /subscription/pay/wallet:
     get:
       consumes:
       - application/json
@@ -328,21 +434,33 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v1.OrderInfoResponse'
-      summary: 历史订单
+            type: string
+      security:
+      - Bearer: []
+      summary: 获取订阅支付钱包地址
       tags:
-      - 订单
-  /order/place:
-    post:
+      - 公共
+  /subscription/price:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Bar'
+      security:
+      - Bearer: []
+      summary: 获取订阅价格
+      tags:
+      - 公共
+  /transaction/recharge/confirm:
+    get:
       consumes:
       - application/json
       parameters:
-      - description: params
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/v1.PlaceOrderRequest'
       - description: Authorization token
         in: header
         name: Authorization
@@ -353,11 +471,37 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 下单
+      security:
+      - Bearer: []
+      summary: 充值确认
       tags:
-      - 订单
+      - 交易
+  /update/user:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.UpdateUserInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: 更新用户信息
+      tags:
+      - 用户模块
   /user:
     get:
       consumes:
@@ -380,7 +524,7 @@ paths:
       summary: 获取用户信息
       tags:
       - 用户模块
-  /user/address/create:
+  /verification/sms/code:
     post:
       consumes:
       - application/json
@@ -390,92 +534,17 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/v1.UserAddressInfoRequest'
-      - description: Authorization token
-        in: header
-        name: Authorization
-        required: true
-        type: string
+          $ref: '#/definitions/v1.SendSMSCodeRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 保存收货地址信息
+      security:
+      - Bearer: []
+      summary: 核对验证码
       tags:
-      - 用户模块
-  /user/address/list:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.UserAddressInfo'
-      summary: 收货地址列表
-      tags:
-      - 用户模块
-  /user/address/update:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: params
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/v1.UserAddressInfoRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 更新收货地址信息
-      tags:
-      - 用户模块
-  /wechat/program/login:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: params
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/v1.WechatProgramLoginRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 微信小程序用户登录
-      tags:
-      - 微信小程序
-  /wechat/qr/login:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/v1.Response'
-      summary: 微信小程序登录二维码
-      tags:
-      - 微信小程序
+      - 短信
 securityDefinitions:
   Bearer:
     in: header

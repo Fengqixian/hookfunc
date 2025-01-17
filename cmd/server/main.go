@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"hookfunc/cmd/server/wire"
+	"hookfunc/internal/okx"
 	"hookfunc/pkg/config"
 	"hookfunc/pkg/log"
 	"os"
@@ -27,13 +28,25 @@ import (
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
+	oneUsdt := 1000000
+	// 月： 9U 季： 24U 年： 99U
+	subscriptionPrice := []int64{int64(oneUsdt * 9), int64(oneUsdt * 24), int64(oneUsdt * 99)}
+
 	var envConf = flag.String("conf", "config/local.yml", "config path, eg: -conf ./config/local.yml")
+	okxConfig := okx.Config{}
+	okxConfig.SubscriptionPrice = subscriptionPrice
+	flag.StringVar(&okxConfig.WalletAddress, "WalletAddress", "TS1GYHHFtfP59x6yhb7hizzzATcqkzfsDz", "WalletAddress")
+	flag.StringVar(&okxConfig.Server, "ServerUrl", "https://www.okx.com", "ServerUrl")
+	flag.IntVar(&okxConfig.Limit, "Limit", 300, "Limit")
+	flag.IntVar(&okxConfig.Retry, "Retry", 10, "Retry")
+	// 30 = 30USDT
 	flag.Parse()
+
 	conf := config.NewConfig(*envConf)
 
 	logger := log.NewLog(conf)
 
-	app, cleanup, err := wire.NewWire(conf, logger)
+	app, cleanup, err := wire.NewWire(&okxConfig, conf, logger)
 	defer cleanup()
 	if err != nil {
 		panic(err)

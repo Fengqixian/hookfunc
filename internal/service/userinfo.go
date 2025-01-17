@@ -2,29 +2,163 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	v1 "hookfunc/api/v1"
 	"hookfunc/internal/model"
+	"hookfunc/internal/okx"
 	"hookfunc/internal/repository"
+	"hookfunc/pkg/helper/uuid"
 	"math/rand"
+	"strconv"
 	"time"
+)
+
+var (
+	VerificationsCodeRedisKey = "sms:verifications:code:%s"
 )
 
 type UserInfoService interface {
 	GetUserInfo(ctx context.Context, openid string) (*model.UserInfo, error)
 	GetUserInfoById(ctx context.Context, userId int64) (*model.UserInfo, error)
 	CreateUserInfo(ctx context.Context, userInfo *model.UserInfo) error
+	SendNoteVerificationCode(ctx context.Context, phone string) error
+	VerificationCode(ctx context.Context, params v1.SendSMSCodeRequest) (string, error)
+	ConfirmRechargeRecord(ctx context.Context, userId int64) (bool, error)
+	UpdateUserInfo(ctx context.Context, userInfo *model.UserInfo) error
 }
 
-func NewUserInfoService(service *Service, userInfoRepository repository.UserInfoRepository) UserInfoService {
+func NewUserInfoService(config *okx.Config, service *Service, repository *repository.Repository, userInfoRepository repository.UserInfoRepository) UserInfoService {
+	http := okx.NewHttp(config)
 	return &userInfoService{
 		Service:            service,
 		userInfoRepository: userInfoRepository,
+		Repository:         repository,
+		Config:             config,
+		Http:               http,
 	}
 }
 
 type userInfoService struct {
 	*Service
 	userInfoRepository repository.UserInfoRepository
+	*repository.Repository
+	*okx.Config
+	*okx.Http
+}
+
+func (s *userInfoService) UpdateUserInfo(ctx context.Context, userInfo *model.UserInfo) error {
+	return s.userInfoRepository.UpdateUserInfo(ctx, userInfo)
+}
+
+func (s *userInfoService) ConfirmRechargeRecord(ctx context.Context, userId int64) (bool, error) {
+	userInfo, err := s.GetUserInfoById(ctx, userId)
+	if err != nil {
+		return false, err
+	}
+
+	if userInfo.Wallet == "" {
+		return false, errors.New("账户未关联钱包地址")
+	}
+
+	var response okx.TransactionRecordResponse
+	err = s.Http.Get(fmt.Sprintf("https://api.trongrid.io/v1/accounts/%s/transactions/trc20?only_to=true&only_confirmed=true&min_timestamp=%s", s.Config.WalletAddress, GetTimestampOneHourAgo()), &response)
+	if err != nil {
+		return false, err
+	}
+
+	for _, record := range response.Data {
+		parseInt, err := strconv.ParseInt(record.Value, 10, 64)
+		if err != nil {
+			continue
+		}
+
+		if record.From == userInfo.Wallet && parseInt > s.Config.SubscriptionPrice[0] {
+			if parseInt >= s.Config.SubscriptionPrice[0] && parseInt < s.Config.SubscriptionPrice[1] {
+				// 开通一月
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 31)
+
+			} else if parseInt >= s.Config.SubscriptionPrice[1] && parseInt < s.Config.SubscriptionPrice[2] {
+				// 开通一季
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 93)
+
+			} else if parseInt >= s.Config.SubscriptionPrice[2] {
+				// 开通一年
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 365)
+
+			}
+
+			err := s.userInfoRepository.UpdateSubscriptionEndTime(ctx, userInfo)
+			if err != nil {
+				return false, err
+			}
+
+			return true, nil
+		}
+	}
+
+	return false, err
+}
+
+// GetNewDateTime 根据输入的datetime和天数返回新的datetime
+func GetNewDateTime(datetime time.Time, days int) time.Time {
+	// 检查datetime是否为零值
+	if datetime.IsZero() {
+		// 如果datetime为零值，使用当前系统时间
+		datetime = time.Now()
+	}
+
+	// 使用AddDate方法将时间加上指定的天数
+	newTime := datetime.AddDate(0, 0, days)
+
+	return newTime
+}
+
+func GetTimestampOneHourAgo() string {
+	// 获取当前时间
+	currentTime := time.Now()
+
+	// 计算一小时前的时间
+	oneHourAgo := currentTime.Add(-2000 * time.Hour)
+
+	// 将时间转换为时间戳（以秒为单位）
+	timestamp := oneHourAgo.Unix()
+
+	return strconv.FormatInt(timestamp, 10) + "000"
+}
+
+func (s *userInfoService) VerificationCode(ctx context.Context, params v1.SendSMSCodeRequest) (string, error) {
+	code := s.Repository.GetRedisClient().Get(ctx, fmt.Sprintf(VerificationsCodeRedisKey, params.PhoneNumber))
+	if code == nil {
+		return "", fmt.Errorf("验证码已过期")
+	}
+
+	if code.Val() != params.Code {
+		return "", fmt.Errorf("验证码错误")
+	}
+
+	info, err := s.GetUserInfo(ctx, params.PhoneNumber)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := s.jwt.GenToken(info.ID, time.Now().Add(time.Hour*24*30))
+	if err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+func (s *userInfoService) SendNoteVerificationCode(ctx context.Context, phone string) error {
+	codeKey := fmt.Sprintf(VerificationsCodeRedisKey, phone)
+	cacheCode := s.Repository.GetRedisClient().Get(ctx, codeKey)
+	if cacheCode.Val() != "" {
+		return fmt.Errorf("验证码已发送")
+	}
+
+	code := uuid.GenerateSMSCode()
+	s.Repository.GetRedisClient().Set(ctx, codeKey, code, 120*time.Second)
+	return nil
 }
 
 var vegetables = []string{
@@ -81,9 +215,10 @@ func (s *userInfoService) GetUserInfo(ctx context.Context, openid string) (*mode
 	}
 
 	newUser := &model.UserInfo{
-		Openid:   openid,
-		NickName: generateNickname(),
-		Avatar:   "https://cdn.learnku.com/uploads/images/201805/11/1/ZnrA2VK0SN.png!/both/200x200",
+		Openid:      openid,
+		NickName:    generateNickname(),
+		Avatar:      "https://cdn.learnku.com/uploads/images/201805/11/1/ZnrA2VK0SN.png!/both/200x200",
+		PhoneNumber: openid,
 	}
 
 	err = s.CreateUserInfo(ctx, newUser)

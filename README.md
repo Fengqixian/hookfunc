@@ -16,3 +16,6 @@ Nunu is a scaffolding tool for building Go applications. Its name comes from a g
 ## License
 
 Nunu is released under the MIT License. For more information, see the [LICENSE](LICENSE) file.
+
+
+swag init -g .\cmd\server\main.go

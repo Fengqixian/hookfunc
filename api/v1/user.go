@@ -30,3 +30,13 @@ type GetProfileResponse struct {
 	Response
 	Data GetProfileResponseData
 }
+
+type SendSMSCodeRequest struct {
+	PhoneNumber string `json:"phoneNumber" binding:"required" example:"1234567890"`
+	Code        string `json:"code" binding:"required" example:"123456"`
+}
+
+type UpdateUserInfoRequest struct {
+	Wallet      string `json:"wallet"`
+	PhoneNumber string `json:"phoneNumber"`
+}
