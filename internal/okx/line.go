@@ -149,9 +149,12 @@ func (s *KLine) CalculateRSI(prices []model.LineItem, period int64) []model.Line
 		if prices[i].ClosePrice > prices[i-1].ClosePrice {
 			avgGain = (avgGain*(float64(period-1)) + (prices[i].ClosePrice - prices[i-1].ClosePrice)) / float64(period)
 			avgLoss = (avgLoss * float64(period-1)) / float64(period)
-		} else {
+		} else if prices[i].ClosePrice < prices[i-1].ClosePrice {
 			avgLoss = (avgLoss*(float64(period-1)) + (prices[i-1].ClosePrice - prices[i].ClosePrice)) / float64(period)
 			avgGain = (avgGain * float64(period-1)) / float64(period)
+		} else {
+			avgGain = avgGain * float64(period-1) / float64(period)
+			avgLoss = avgLoss * float64(period-1) / float64(period)
 		}
 	}
 
