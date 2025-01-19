@@ -155,6 +155,7 @@ func (s *KLine) CalculateRSI(prices []model.LineItem, period int64) []model.Line
 		}
 	}
 
+	prices[len(prices)-1].Index.Rsi = 100 - (100 / (1 + avgGain/avgLoss))
 	return prices
 }
 
