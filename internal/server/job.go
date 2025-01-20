@@ -2,22 +2,42 @@ package server
 
 import (
 	"context"
+	"github.com/go-co-op/gocron"
+	"go.uber.org/zap"
+	"hookfunc/internal/job"
 	"hookfunc/pkg/log"
+	"time"
 )
 
 type Job struct {
-	log *log.Logger
+	logger       *log.Logger
+	chainService job.ChainService
+	scheduler    *gocron.Scheduler
 }
 
 func NewJob(
-	log *log.Logger,
+	logger *log.Logger,
+	chainService job.ChainService,
 ) *Job {
 	return &Job{
-		log: log,
+		logger:       logger,
+		chainService: chainService,
 	}
 }
+
 func (j *Job) Start(ctx context.Context) error {
-	// eg: kafka consumer
+	j.scheduler = gocron.NewScheduler(time.UTC)
+	_, err := j.scheduler.CronWithSeconds("0/5 * * * * *").Do(func() {
+		start := time.Now()
+		j.chainService.ChainTransaction(ctx)
+		elapsed := time.Since(start)
+		j.logger.Info("【链上交易数据同步】", zap.Any("elapsed", elapsed))
+	})
+	if err != nil {
+		j.logger.Error("【链上交易数据同步】任务执行失败", zap.Error(err))
+	}
+
+	j.scheduler.StartBlocking()
 	return nil
 }
 func (j *Job) Stop(ctx context.Context) error {

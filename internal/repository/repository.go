@@ -64,6 +64,7 @@ func (r *Repository) Transaction(ctx context.Context, fn func(ctx context.Contex
 func NewDB(conf *viper.Viper, l *log.Logger) *gorm.DB {
 	logger := zapgorm2.New(l.Logger)
 	logger.SetAsDefault()
+	logger.IgnoreRecordNotFoundError = true
 	db, err := gorm.Open(mysql.Open(conf.GetString("data.mysql.user")), &gorm.Config{Logger: logger})
 	if err != nil {
 		panic(err)

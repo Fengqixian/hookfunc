@@ -14,6 +14,7 @@ type UserInfoRepository interface {
 	InsertUserInfo(ctx context.Context, userInfo *model.UserInfo) error
 	UpdateSubscriptionEndTime(ctx context.Context, userInfo *model.UserInfo) error
 	UpdateUserInfo(ctx context.Context, userInfo *model.UserInfo) error
+	FirstByUserWallet(ctx context.Context, userWallet string) (*model.UserInfo, error)
 }
 
 func NewUserInfoRepository(repository *Repository) UserInfoRepository {
@@ -26,6 +27,15 @@ type userInfoRepository struct {
 	*Repository
 }
 
+func (r *userInfoRepository) FirstByUserWallet(ctx context.Context, userWallet string) (*model.UserInfo, error) {
+	var userInfo *model.UserInfo
+	if err := r.DB(ctx).Where("wallet = ?", userWallet).First(&userInfo).Error; err != nil {
+		return nil, err
+	}
+
+	return userInfo, nil
+}
+
 func (r *userInfoRepository) UpdateUserInfo(ctx context.Context, userInfo *model.UserInfo) error {
 	if err := r.DB(ctx).Updates(userInfo).Error; err != nil {
 		return err
@@ -35,7 +45,7 @@ func (r *userInfoRepository) UpdateUserInfo(ctx context.Context, userInfo *model
 }
 
 func (r *userInfoRepository) UpdateSubscriptionEndTime(ctx context.Context, userInfo *model.UserInfo) error {
-	if err := r.DB(ctx).UpdateColumn("subscription_end", userInfo.SubscriptionEnd).Where("id = ?", userInfo.ID).Error; err != nil {
+	if err := r.DB(ctx).Model(&model.UserInfo{}).Where("id = ?", userInfo.ID).UpdateColumn("subscription_end", userInfo.SubscriptionEnd).Error; err != nil {
 		return err
 	}
 
