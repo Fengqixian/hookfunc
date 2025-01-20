@@ -7,7 +7,6 @@ import (
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"hookfunc/internal/handler"
-	"hookfunc/internal/job"
 	"hookfunc/internal/okx"
 	"hookfunc/internal/repository"
 	"hookfunc/internal/server"
@@ -49,7 +48,7 @@ var serviceSet = wire.NewSet(
 	service.NewStrategyService,
 	service.NewBarService,
 	service.NewIndexService,
-	job.NewChainService,
+	service.NewChainService,
 )
 
 var handlerSet = wire.NewSet(

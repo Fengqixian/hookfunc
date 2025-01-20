@@ -4,20 +4,20 @@ import (
 	"context"
 	"github.com/go-co-op/gocron"
 	"go.uber.org/zap"
-	"hookfunc/internal/job"
+	"hookfunc/internal/service"
 	"hookfunc/pkg/log"
 	"time"
 )
 
 type Job struct {
 	logger       *log.Logger
-	chainService job.ChainService
+	chainService service.ChainService
 	scheduler    *gocron.Scheduler
 }
 
 func NewJob(
 	logger *log.Logger,
-	chainService job.ChainService,
+	chainService service.ChainService,
 ) *Job {
 	return &Job{
 		logger:       logger,

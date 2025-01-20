@@ -10,7 +10,6 @@ import (
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"hookfunc/internal/handler"
-	"hookfunc/internal/job"
 	"hookfunc/internal/okx"
 	"hookfunc/internal/repository"
 	"hookfunc/internal/server"
@@ -50,9 +49,9 @@ func NewWire(config *okx.Config, viperViper *viper.Viper, logger *log.Logger) (*
 	indexHandler := handler.NewIndexHandler(handlerHandler, indexService)
 	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, strategyHandler, barHandler, indexHandler)
 	transactionRepository := repository.NewTransactionRepository(repositoryRepository)
-	chainService := job.NewChainService(logger, client, transactionRepository, config, userInfoRepository)
-	serverJob := server.NewJob(logger, chainService)
-	appApp := newApp(httpServer, serverJob)
+	chainService := service.NewChainService(logger, client, transactionRepository, config, userInfoRepository)
+	job := server.NewJob(logger, chainService)
+	appApp := newApp(httpServer, job)
 	return appApp, func() {
 	}, nil
 }
@@ -61,13 +60,13 @@ func NewWire(config *okx.Config, viperViper *viper.Viper, logger *log.Logger) (*
 
 var repositorySet = wire.NewSet(repository.NewWechatMiniProgram, repository.NewDB, repository.NewRedis, repository.NewRepository, repository.NewTransaction, repository.NewResourceRepository, repository.NewUserInfoRepository, repository.NewGoodsRepository, repository.NewUserAddressRepository, repository.NewOrderInfoRepository, repository.NewOrderGoodsRepository, repository.NewStrategyRepository, repository.NewBarRepository, repository.NewIndexRepository, repository.NewTransactionRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewResourceService, service.NewUserInfoService, service.NewWechatService, service.NewGoodsService, service.NewUserAddressService, service.NewOrderInfoService, service.NewOrderGoodsService, service.NewStrategyService, service.NewBarService, service.NewIndexService, job.NewChainService)
+var serviceSet = wire.NewSet(service.NewService, service.NewResourceService, service.NewUserInfoService, service.NewWechatService, service.NewGoodsService, service.NewUserAddressService, service.NewOrderInfoService, service.NewOrderGoodsService, service.NewStrategyService, service.NewBarService, service.NewIndexService, service.NewChainService)
 
 var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewWechatHandler, handler.NewStrategyHandler, handler.NewBarHandler, handler.NewIndexHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob, server.NewTask)
 
 // build App
-func newApp(httpServer *http.Server, job2 *server.Job) *app.App {
-	return app.NewApp(app.WithServer(httpServer, job2), app.WithName("demo-server"))
+func newApp(httpServer *http.Server, job *server.Job) *app.App {
+	return app.NewApp(app.WithServer(httpServer, job), app.WithName("demo-server"))
 }
