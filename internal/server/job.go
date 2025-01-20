@@ -27,6 +27,7 @@ func NewJob(
 
 func (j *Job) Start(ctx context.Context) error {
 	j.scheduler = gocron.NewScheduler(time.UTC)
+	// 配置钱包收到转账后为钱包所关联的账号开通数据订阅服务
 	_, err := j.scheduler.CronWithSeconds("0/5 * * * * *").Do(func() {
 		start := time.Now()
 		j.chainService.ChainTransaction(ctx)
@@ -36,6 +37,10 @@ func (j *Job) Start(ctx context.Context) error {
 	if err != nil {
 		j.logger.Error("【链上交易数据同步】任务执行失败", zap.Error(err))
 	}
+
+	//TODO 更新链上数据
+
+	//TODO 为已订阅的用户进行数据推送
 
 	j.scheduler.StartBlocking()
 	return nil

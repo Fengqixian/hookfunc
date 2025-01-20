@@ -49,6 +49,7 @@ var serviceSet = wire.NewSet(
 	service.NewBarService,
 	service.NewIndexService,
 	service.NewChainService,
+	service.NewLineService,
 )
 
 var handlerSet = wire.NewSet(

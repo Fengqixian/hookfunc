@@ -8,8 +8,8 @@ import (
 	"go.uber.org/zap"
 	v1 "hookfunc/api/v1"
 	"hookfunc/internal/model"
-	"hookfunc/internal/okx"
 	"hookfunc/internal/repository"
+	"hookfunc/internal/strategy"
 )
 
 type IndexService interface {
@@ -17,21 +17,20 @@ type IndexService interface {
 	IndexHitTarget(ctx context.Context, req v1.IndexRequest) (any, error)
 }
 
-func NewIndexService(okxConfig *okx.Config, service *Service, indexRepository repository.IndexRepository) IndexService {
-	kline := okx.NewLine(okxConfig)
+func NewIndexService(service *Service, lineService LineService, indexRepository repository.IndexRepository) IndexService {
 	return &indexService{
 		Service:         service,
 		indexRepository: indexRepository,
-		kline:           kline,
-		s:               okx.NewWarningStrategy(kline),
+		s:               strategy.NewWarningStrategy(),
+		lineService:     lineService,
 	}
 }
 
 type indexService struct {
 	*Service
 	indexRepository repository.IndexRepository
-	kline           *okx.KLine
-	s               *okx.WarningStrategy
+	s               *strategy.WarningStrategy
+	lineService     LineService
 }
 
 func (i indexService) IndexHitTarget(ctx context.Context, req v1.IndexRequest) (any, error) {
@@ -45,29 +44,17 @@ func (i indexService) IndexHitTarget(ctx context.Context, req v1.IndexRequest) (
 		return nil, errors.New("index not found")
 	}
 
-	line, err := i.kline.GetLine(req.InstId, req.Bar)
-	if err != nil {
-		i.logger.Error("【指标回测失败】未获取到K线数据", zap.Error(err))
-		return nil, err
-	}
-
-	if line == nil || len(line) == 0 {
-		i.logger.Error("【指标回测失败】kline not found", zap.Any("req", req))
-		return nil, errors.New("服务繁忙，请稍后再试")
-	}
-
 	array, err := GetIndexConfigAsInt64Array(req.IndexConfig)
 	if err != nil {
 		i.logger.Error("【指标回测失败】", zap.Error(err))
 		return nil, fmt.Errorf("指标配置错误：%s", req.IndexConfig)
 	}
 
-	strategy := i.s.Strategy[index.Name]
-	if strategy == nil {
-		return nil, fmt.Errorf("未开放的指标：%s", index.Name)
+	data := i.lineService.GetKLine(req.InstId, req.Bar)
+	if data == nil {
+		return nil, fmt.Errorf("服务繁忙，请稍后再试")
 	}
-
-	result, err := strategy.Execute(line, array, req.WarningConfig)
+	result, err := i.s.Strategy[index.Name].Execute(data, array, req.WarningConfig)
 	if err != nil {
 		i.logger.Error("【指标回测失败】", zap.Error(err))
 		return nil, err

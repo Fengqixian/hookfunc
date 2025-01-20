@@ -22,7 +22,7 @@ func (t *Task) Start(ctx context.Context) error {
 	// eg: crontab task
 	t.scheduler = gocron.NewScheduler(time.UTC)
 
-	_, err := t.scheduler.CronWithSeconds("0/3 * * * * *").Do(func() {
+	_, err := t.scheduler.CronWithSeconds("0/1 * * * * *").Do(func() {
 		t.log.Info("I'm a Task1.")
 	})
 	if err != nil {

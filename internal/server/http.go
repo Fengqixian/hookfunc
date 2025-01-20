@@ -72,7 +72,6 @@ func NewHTTPServer(
 		{
 			strictAuthRouter.GET("/user", userHandler.GetProfile)
 			strictAuthRouter.POST("/update/user", userHandler.UpdateProfile)
-			strictAuthRouter.GET("/transaction/recharge/confirm", userHandler.ConfirmRechargeRecord)
 		}
 
 		// Strict permission routing group
