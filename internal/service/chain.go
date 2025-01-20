@@ -110,10 +110,11 @@ func (c *chainService) ChainTransaction(ctx context.Context) {
 
 // GetNewDateTime 根据输入的datetime和天数返回新的datetime
 func GetNewDateTime(datetime time.Time, days int) time.Time {
+	now := time.Now()
 	// 检查datetime是否为零值
-	if datetime.IsZero() {
+	if datetime.IsZero() || datetime.Before(now) {
 		// 如果datetime为零值，使用当前系统时间
-		datetime = time.Now()
+		datetime = now
 	}
 
 	// 使用AddDate方法将时间加上指定的天数
