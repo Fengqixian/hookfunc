@@ -146,26 +146,3 @@ func (h *UserHandler) VerificationSmsCode(ctx *gin.Context) {
 
 	v1.HandleSuccess(ctx, token)
 }
-
-// ConfirmRechargeRecord godoc
-//
-//	@Summary	充值确认
-//	@Schemes
-//	@Description
-//	@Tags		交易
-//	@Accept		json
-//	@Produce	json
-//	@Security	Bearer
-//	@Param		Authorization	header		string	true	"Authorization token"
-//	@Success	200
-//	@Router		/transaction/recharge/confirm [get]
-func (h *UserHandler) ConfirmRechargeRecord(ctx *gin.Context) {
-	userId := GetUserIdFromCtx(ctx)
-	result, err := h.userInfoService.ConfirmRechargeRecord(ctx, userId)
-	if err != nil {
-		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
-		return
-	}
-
-	v1.HandleSuccess(ctx, result)
-}
