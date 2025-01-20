@@ -119,7 +119,7 @@ func GetTimestampOneHourAgo() string {
 	currentTime := time.Now()
 
 	// 计算一小时前的时间
-	oneHourAgo := currentTime.Add(-2000 * time.Hour)
+	oneHourAgo := currentTime.Add(-1 * time.Hour)
 
 	// 将时间转换为时间戳（以秒为单位）
 	timestamp := oneHourAgo.Unix()
