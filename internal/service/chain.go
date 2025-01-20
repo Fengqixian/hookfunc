@@ -61,21 +61,24 @@ func (c *chainService) ChainTransaction(ctx context.Context) {
 			continue
 		}
 
-		// 单位月
-		var level int32
+		// 单位天
+		var level int
 		if record.From == userInfo.Wallet && parseInt > c.Config.SubscriptionPrice[0] {
 			if parseInt >= c.Config.SubscriptionPrice[0] && parseInt < c.Config.SubscriptionPrice[1] {
 				// 开通一月
-				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 31)
-				level = 1
+				level = 31
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
+
 			} else if parseInt >= c.Config.SubscriptionPrice[1] && parseInt < c.Config.SubscriptionPrice[2] {
 				// 开通一季
-				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 93)
-				level = 3
+				level = 93
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
+
 			} else if parseInt >= c.Config.SubscriptionPrice[2] {
 				// 开通一年
-				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, 365)
-				level = 12
+				level = 365
+				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
+
 			}
 
 			err := c.userInfoRepository.UpdateSubscriptionEndTime(ctx, userInfo)

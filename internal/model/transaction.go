@@ -14,7 +14,7 @@ const TableNameTransaction = "transaction"
 type Transaction struct {
 	ID             int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键ID" json:"id"`                        // 主键ID
 	UserID         int64     `gorm:"column:user_id;not null;comment:用户ID" json:"user_id"`                                   // 用户ID
-	Level          int32     `gorm:"column:level;not null;comment:开通级别" json:"level"`                                       // 开通级别
+	Level          int       `gorm:"column:level;not null;comment:开通级别" json:"level"`                                       // 开通级别
 	TransactionID  string    `gorm:"column:transaction_id;not null;comment:转账记录ID" json:"transaction_id"`                   // 转账记录ID
 	BlockTimestamp int64     `gorm:"column:block_timestamp;not null;comment:区块确认时间" json:"block_timestamp"`                 // 区块确认时间
 	From           string    `gorm:"column:from;not null;comment:来自某一账号的转账" json:"from"`                                    // 来自某一账号的转账
