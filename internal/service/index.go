@@ -52,8 +52,10 @@ func (i indexService) IndexHitTarget(ctx context.Context, req v1.IndexRequest) (
 
 	data := i.lineService.GetKLine(req.InstId, req.Bar)
 	if data == nil {
+		i.logger.Error("【指标回测失败】获取K线数据失败", zap.Any("req", req))
 		return nil, fmt.Errorf("服务繁忙，请稍后再试")
 	}
+
 	result, err := i.s.Strategy[index.Name].Execute(data, array, req.WarningConfig)
 	if err != nil {
 		i.logger.Error("【指标回测失败】", zap.Error(err))
