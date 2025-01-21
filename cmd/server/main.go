@@ -28,20 +28,36 @@ import (
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
+
 	oneUsdt := 1000000
 	// 月： 9U 季： 24U 年： 99U
 	subscriptionPrice := []int64{int64(oneUsdt * 9), int64(oneUsdt * 24), int64(oneUsdt * 99)}
 
-	var envConf = flag.String("conf", "config/local.yml", "config path, eg: -conf ./config/local.yml")
-	okxConfig := okx.Config{}
+	// 钱包配置
+	wallets := []okx.PayWalletInfo{
+		{
+			WalletAddress: "TS1GYHHFtfP59x6yhb7hizzzATcqkzfsDz",
+			Chain:         "TRC-20",
+			Coin:          "USDT",
+		},
+		{
+			WalletAddress: "2S9ze8NRR1MX6eubaDHjDoWKCKAp6z6ZUn9ZbiBix1Er",
+			Chain:         "SOL",
+			Coin:          "USDT",
+		},
+	}
+	okxConfig := okx.Config{
+		Wallets: wallets,
+	}
+
 	okxConfig.SubscriptionPrice = subscriptionPrice
-	flag.StringVar(&okxConfig.WalletAddress, "WalletAddress", "TS1GYHHFtfP59x6yhb7hizzzATcqkzfsDz", "WalletAddress")
 	flag.StringVar(&okxConfig.Server, "ServerUrl", "https://www.okx.com", "ServerUrl")
 	flag.IntVar(&okxConfig.Limit, "Limit", 300, "Limit")
 	flag.IntVar(&okxConfig.Retry, "Retry", 10, "Retry")
 	// 30 = 30USDT
 	flag.Parse()
 
+	var envConf = flag.String("conf", "config/local.yml", "config path, eg: -conf ./config/local.yml")
 	conf := config.NewConfig(*envConf)
 
 	logger := log.NewLog(conf)

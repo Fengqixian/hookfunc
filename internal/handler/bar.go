@@ -91,5 +91,5 @@ func (h *BarHandler) ListSubscriptionPrice(ctx *gin.Context) {
 //	@Success	200	{object}	string
 //	@Router		/subscription/pay/wallet [get]
 func (h *BarHandler) GetSubscriptionPayWallet(ctx *gin.Context) {
-	v1.HandleSuccess(ctx, h.Config.WalletAddress)
+	v1.HandleSuccess(ctx, h.Config.Wallets)
 }

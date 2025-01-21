@@ -40,70 +40,72 @@ type chainService struct {
 
 func (c *chainService) ChainTransaction(ctx context.Context) {
 	var response okx.TransactionRecordResponse
-	err := c.Http.Get(fmt.Sprintf("https://api.trongrid.io/v1/accounts/%s/transactions/trc20?only_to=true&only_confirmed=true&min_timestamp=%s", c.Config.WalletAddress, GetTimestampOneHourAgo()), &response)
-	if err != nil {
-		return
-	}
-
-	for _, record := range response.Data {
-		userInfo, err := c.userInfoRepository.FirstByUserWallet(ctx, record.From)
+	for _, wallet := range c.Wallets {
+		err := c.Http.Get(fmt.Sprintf("https://api.trongrid.io/v1/accounts/%s/transactions/trc20?only_to=true&only_confirmed=true&min_timestamp=%s", wallet.WalletAddress, GetTimestampOneHourAgo()), &response)
 		if err != nil {
-			continue
+			return
 		}
 
-		parseInt, err := strconv.ParseInt(record.Value, 10, 64)
-		if err != nil {
-			continue
-		}
-
-		r, err := c.transactionRepository.ExistByTransactionId(ctx, record.TransactionId)
-		if err == nil && r {
-			continue
-		}
-
-		// 单位天
-		var level int
-		if record.From == userInfo.Wallet && parseInt > c.Config.SubscriptionPrice[0] {
-			if parseInt >= c.Config.SubscriptionPrice[0] && parseInt < c.Config.SubscriptionPrice[1] {
-				// 开通一月
-				level = 31
-				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
-
-			} else if parseInt >= c.Config.SubscriptionPrice[1] && parseInt < c.Config.SubscriptionPrice[2] {
-				// 开通一季
-				level = 93
-				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
-
-			} else if parseInt >= c.Config.SubscriptionPrice[2] {
-				// 开通一年
-				level = 365
-				userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
-
-			}
-
-			err := c.userInfoRepository.UpdateSubscriptionEndTime(ctx, userInfo)
+		for _, record := range response.Data {
+			userInfo, err := c.userInfoRepository.FirstByUserWallet(ctx, record.From)
 			if err != nil {
-				c.log.Logger.Error("【链上交易】用户订阅数据保存失败：", zap.Error(err), zap.Any("transaction", userInfo))
 				continue
 			}
 
-			transaction := model.Transaction{
-				UserID:         userInfo.ID,
-				TransactionID:  record.TransactionId,
-				From:           record.From,
-				To:             record.To,
-				Value:          record.Value,
-				Level:          level,
-				BlockTimestamp: record.BlockTimestamp,
-				Type:           record.Type,
-			}
-
-			err = c.transactionRepository.SaveTransaction(ctx, &transaction)
+			parseInt, err := strconv.ParseInt(record.Value, 10, 64)
 			if err != nil {
-				c.log.Logger.Error("【链上交易】交易数据保存失败：", zap.Error(err), zap.Any("transaction", transaction))
 				continue
 			}
-			c.log.Logger.Info("【链上交易】订阅成功", zap.Any("transaction", transaction))
+
+			r, err := c.transactionRepository.ExistByTransactionId(ctx, record.TransactionId)
+			if err == nil && r {
+				continue
+			}
+
+			// 单位天
+			var level int
+			if record.From == userInfo.Wallet && parseInt > c.Config.SubscriptionPrice[0] {
+				if parseInt >= c.Config.SubscriptionPrice[0] && parseInt < c.Config.SubscriptionPrice[1] {
+					// 开通一月
+					level = 31
+					userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
+
+				} else if parseInt >= c.Config.SubscriptionPrice[1] && parseInt < c.Config.SubscriptionPrice[2] {
+					// 开通一季
+					level = 93
+					userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
+
+				} else if parseInt >= c.Config.SubscriptionPrice[2] {
+					// 开通一年
+					level = 365
+					userInfo.SubscriptionEnd = GetNewDateTime(userInfo.SubscriptionEnd, level)
+
+				}
+
+				err := c.userInfoRepository.UpdateSubscriptionEndTime(ctx, userInfo)
+				if err != nil {
+					c.log.Logger.Error("【链上交易】用户订阅数据保存失败：", zap.Error(err), zap.Any("transaction", userInfo))
+					continue
+				}
+
+				transaction := model.Transaction{
+					UserID:         userInfo.ID,
+					TransactionID:  record.TransactionId,
+					From:           record.From,
+					To:             record.To,
+					Value:          record.Value,
+					Level:          level,
+					BlockTimestamp: record.BlockTimestamp,
+					Type:           record.Type,
+				}
+
+				err = c.transactionRepository.SaveTransaction(ctx, &transaction)
+				if err != nil {
+					c.log.Logger.Error("【链上交易】交易数据保存失败：", zap.Error(err), zap.Any("transaction", transaction))
+					continue
+				}
+				c.log.Logger.Info("【链上交易】订阅成功", zap.Any("transaction", transaction))
+			}
 		}
 	}
 }

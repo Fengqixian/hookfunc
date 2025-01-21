@@ -2,10 +2,16 @@ package okx
 
 type Config struct {
 	Server            string
-	WalletAddress     string
+	Wallets           []PayWalletInfo
 	SubscriptionPrice []int64
 	Limit             int // 限制条数
 	Retry             int // 重试次数
+}
+
+type PayWalletInfo struct {
+	WalletAddress string
+	Chain         string
+	Coin          string
 }
 
 type TransactionRecordResponse struct {
