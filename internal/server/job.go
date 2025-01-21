@@ -13,15 +13,18 @@ type Job struct {
 	logger       *log.Logger
 	chainService service.ChainService
 	scheduler    *gocron.Scheduler
+	lineService  service.LineService
 }
 
 func NewJob(
 	logger *log.Logger,
 	chainService service.ChainService,
+	lineService service.LineService,
 ) *Job {
 	return &Job{
 		logger:       logger,
 		chainService: chainService,
+		lineService:  lineService,
 	}
 }
 
@@ -38,8 +41,13 @@ func (j *Job) Start(ctx context.Context) error {
 		j.logger.Error("【链上交易数据同步】任务执行失败", zap.Error(err))
 	}
 
-	//TODO 更新链上数据
-
+	// 更新链上数据
+	_, err = j.scheduler.CronWithSeconds("0/1 * * * * *").Do(func() {
+		j.lineService.AllCoinChainKlineDataSync(ctx)
+	})
+	if err != nil {
+		j.logger.Error("【OKX数据同步】任务执行失败", zap.Error(err))
+	}
 	//TODO 为已订阅的用户进行数据推送
 
 	j.scheduler.StartBlocking()

@@ -44,14 +44,14 @@ func NewWire(config *okx.Config, viperViper *viper.Viper, logger *log.Logger) (*
 	barRepository := repository.NewBarRepository(repositoryRepository)
 	barService := service.NewBarService(serviceService, barRepository)
 	barHandler := handler.NewBarHandler(config, handlerHandler, barService)
-	lineService := service.NewLineService(config, serviceService)
+	lineService := service.NewLineService(barService, config, serviceService)
 	indexRepository := repository.NewIndexRepository(repositoryRepository)
 	indexService := service.NewIndexService(serviceService, lineService, indexRepository)
 	indexHandler := handler.NewIndexHandler(handlerHandler, indexService)
 	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, wechatHandler, strategyHandler, barHandler, indexHandler)
 	transactionRepository := repository.NewTransactionRepository(repositoryRepository)
 	chainService := service.NewChainService(logger, client, transactionRepository, config, userInfoRepository)
-	job := server.NewJob(logger, chainService)
+	job := server.NewJob(logger, chainService, lineService)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {
 	}, nil

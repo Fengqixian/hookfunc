@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"hookfunc/internal/model"
 	"math"
+	"time"
 )
 
 // CalculateATR calculates the ATR (Average True Range) over a given period.
@@ -221,4 +222,13 @@ func MACDLongOrSort(line []model.LineItem, side bool) []model.LineItem {
 	}
 
 	return res
+}
+
+func CheckMinuteModulo(divisor int) bool {
+	// 获取当前系统时间
+	currentTime := time.Now()
+	// 获取当前分钟数
+	minute := currentTime.Minute()
+	// 取余操作
+	return minute%divisor == 0 && currentTime.Second() < 1
 }
