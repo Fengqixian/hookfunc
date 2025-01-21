@@ -19,9 +19,9 @@ type CreateStrategyRequest struct {
 }
 
 type IndexRequest struct {
-	IndexId       int64  `json:"indexId" binding:"required"`
-	InstId        string `json:"InstId" binding:"required"`
-	IndexConfig   string `json:"indexConfig" binding:"required"`
-	WarningConfig string `json:"warningConfig" binding:"required"`
-	Bar           string `json:"bar" binding:"required"`
+	IndexId       int64  `json:"indexId" binding:"required" example:"1"`
+	InstId        string `json:"InstId" binding:"required" example:"DOGE-USDT-SWAP"`
+	IndexConfig   string `json:"indexConfig" binding:"required" example:"[12, 26,9]"`
+	WarningConfig string `json:"warningConfig" binding:"required" example:"{\"index\": 0}"`
+	Bar           string `json:"bar" binding:"required" example:"5m"`
 }

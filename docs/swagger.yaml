@@ -10,6 +10,9 @@ definitions:
       id:
         description: 主键ID
         type: integer
+      interval:
+        description: bar interval
+        type: integer
       updateTime:
         description: 更新时间
         type: string
@@ -113,14 +116,19 @@ definitions:
   v1.IndexRequest:
     properties:
       InstId:
+        example: DOGE-USDT-SWAP
         type: string
       bar:
+        example: 5m
         type: string
       indexConfig:
+        example: '[12, 26,9]'
         type: string
       indexId:
+        example: 1
         type: integer
       warningConfig:
+        example: '{"index": 0}'
         type: string
     required:
     - InstId
@@ -456,26 +464,6 @@ paths:
       summary: 获取订阅价格
       tags:
       - 公共
-  /transaction/recharge/confirm:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: Authorization token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      security:
-      - Bearer: []
-      summary: 充值确认
-      tags:
-      - 交易
   /update/user:
     post:
       consumes:

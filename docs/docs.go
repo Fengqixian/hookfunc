@@ -478,39 +478,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/transaction/recharge/confirm": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "交易"
-                ],
-                "summary": "充值确认",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
         "/update/user": {
             "post": {
                 "security": [
@@ -639,6 +606,10 @@ const docTemplate = `{
                 },
                 "id": {
                     "description": "主键ID",
+                    "type": "integer"
+                },
+                "interval": {
+                    "description": "bar interval",
                     "type": "integer"
                 },
                 "updateTime": {
@@ -794,19 +765,24 @@ const docTemplate = `{
             ],
             "properties": {
                 "InstId": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "DOGE-USDT-SWAP"
                 },
                 "bar": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "5m"
                 },
                 "indexConfig": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "[12, 26,9]"
                 },
                 "indexId": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "warningConfig": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "{\"index\": 0}"
                 }
             }
         },
