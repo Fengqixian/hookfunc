@@ -39,11 +39,13 @@ func main() {
 			WalletAddress: "TS1GYHHFtfP59x6yhb7hizzzATcqkzfsDz",
 			Chain:         "TRC-20",
 			Coin:          "USDT",
+			Icon:          "",
 		},
 		{
 			WalletAddress: "2S9ze8NRR1MX6eubaDHjDoWKCKAp6z6ZUn9ZbiBix1Er",
 			Chain:         "SOL",
 			Coin:          "USDT",
+			Icon:          "",
 		},
 	}
 	okxConfig := okx.Config{

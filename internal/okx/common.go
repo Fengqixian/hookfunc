@@ -12,6 +12,7 @@ type PayWalletInfo struct {
 	WalletAddress string
 	Chain         string
 	Coin          string
+	Icon          string
 }
 
 type TransactionRecordResponse struct {
